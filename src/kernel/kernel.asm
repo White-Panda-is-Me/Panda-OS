@@ -1,5 +1,7 @@
 bits 16
 
+%define endl 0x0D, 0x0A
+
 entry:
     cli
     mov ax, 0x1000
@@ -28,4 +30,4 @@ puts:
 .done:
     ret
 
-msg1: db "hellomand", 0
+msg1: db "Kernel loaded successfully!", endl, 0

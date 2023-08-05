@@ -12,8 +12,11 @@ entry:
 	mov sp, 0x7C00
 	sti
 
-	mov [drive_num], dl
+	xor ah, ah
+	mov al, 03h
+	int 10h
 
+	mov [drive_num], dl
 	call EnableA20
 
 	mov ah, 0
@@ -28,9 +31,9 @@ entry:
 	mov ch, 00h
 	mov cl, 02h
 	mov dh, 00h
-	mov bx, KERNEL_LOAD_SEGMENT
+	mov bx, STAGE1_LOAD_SEGMENT
 	mov es, bx
-	mov bx, KERNEL_LOAD_OFFSET
+	mov bx, STAGE1_LOAD_OFFSET
 
 	int 13h
 	jc disk_read_err
@@ -38,12 +41,8 @@ entry:
 	mov si, done_reading_disk
 	call puts
 
-	jmp KERNEL_LOAD_SEGMENT:KERNEL_LOAD_OFFSET
+	jmp STAGE1_LOAD_SEGMENT:STAGE1_LOAD_OFFSET
 
-.halt:
-    jmp .halt
-
-; ; ; ; ; ; ; ; ; ; ; ;
 puts:
     mov ah, 0Eh
 	jmp .loop
@@ -57,9 +56,7 @@ puts:
 
 .done:
     ret
-; ; ; ; ; ; ; ; ; ; ; ;
 
-; ; ; ; ; ; ; ; ; ; ; ;
 EnableA20:
     ; First, check if A20 is already enabled
     in al, 0x92         ; Read the system control port B
@@ -74,35 +71,31 @@ EnableA20:
     out 0x64, al
     in al, 0x60         ; Wait for the keyboard controller to be ready
     test al, 2
-    jnz $                  ; Keep waiting if the controller is not ready
+    jnz $               ; Keep waiting if the controller is not ready
 
     mov al, 0xdf        ; A20 enable bit mask (bit 1 set)
     out 0x60, al        ; Write the A20 enable bit to the input buffer
     in al, 0x60         ; Wait for the keyboard controller to be ready
     test al, 2
-    jnz $                  ; Keep waiting if the controller is not ready
+    jnz $               ; Keep waiting if the controller is not ready
 
     ; A20 is now enabled
-    sti                 ; Enable interrupts
+    sti
     ret
 
 A20AlreadyEnabled:
     ret
-; ; ; ; ; ; ; ; ; ; ; ;
 
-; ; ; ; ; ; ; ; ; ; ; ;
 disk_read_err:
 	mov si, reading_disk_err_msg
 	call puts
-; ; ; ; ; ; ; ; ; ; ; ;
 
 drive_num: 					db 0
 msg: 						db "Welcome to MAMMAD OS", endl, 0
 reading_disk_err_msg:		db "Error Reading Sectors into memory", endl, 0
 done_reading_disk:			db "Reading sectors into memory done!", endl, 0
-KERNEL_LOAD_OFFSET: 		equ 0x0000
-KERNEL_LOAD_SEGMENT:		equ 0x1000
-
+STAGE1_LOAD_OFFSET: 		equ 0x7E00
+STAGE1_LOAD_SEGMENT:		equ 0x0000
 
 times 510 - ($ - $$) db 0
 dw 0xAA55

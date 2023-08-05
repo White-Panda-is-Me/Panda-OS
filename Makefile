@@ -21,13 +21,13 @@ bootloader: stage1 stage2
 
 stage1: $(BUILD_DIR)/stage1.bin
 
-$(BUILD_DIR)/stage1.bin: $(SRC_DIR)/bootloader/stage1.asm
-	$(ASM) -g $(SRC_DIR)/bootloader/stage1.asm -f bin -o $(BUILD_DIR)/stage1.bin
+$(BUILD_DIR)/stage1.bin: $(SRC_DIR)/bootloader/stage1/stage1.asm
+	$(ASM) -g $(SRC_DIR)/bootloader/stage1/stage1.asm -f bin -o $(BUILD_DIR)/stage1.bin
 
 stage2: $(BUILD_DIR)/stage2.bin
 
-$(BUILD_DIR)/stage1.bin: $(SRC_DIR)/bootloader/stage1.asm
-	$(ASM) -g $(SRC_DIR)/bootloader/stage2.asm -f bin -o $(BUILD_DIR)/stage2.bin
+$(BUILD_DIR)/stage2.bin: $(SRC_DIR)/bootloader/stage2/stage2.asm
+	$(ASM) -g $(SRC_DIR)/bootloader/stage2/stage2.asm -f bin -o $(BUILD_DIR)/stage2.bin
 
 
 # # # # # # # # # #
