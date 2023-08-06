@@ -1,16 +1,25 @@
 ENTRY(entry)
+OUTPUT_FORMAT("binary")
 
 SECTIONS
 {
     . = 0x7E00;
-    .text ALIGN(0x1000) :
+    .entry :
+    {
+        __entry_start = .;
+        *(.entry)
+    }
+    .text :
     {
         *(.text)
         *(.rodata)
     }
-
-    .data ALIGN(0x1000) :
+    .data :
     {
         *(.data)
+    }
+    .bss :
+    {
+        *(.bss)
     }
 }

@@ -16,7 +16,7 @@ all: stage2
 stage2: $(BUILD_DIR)/stage2.bin
 
 $(BUILD_DIR)/stage2.bin: $(ASMOBJFILES) $(COBJFILES)
-	$(CC) $(LDFLAGS) -Wl,-Map=$(BUILD_DIR)/stage2.map -o $@ $^ -lgcc
+	$(CC) $(LDFLAGS) -Wl,--oformat=binary -Wl,-Map=$(BUILD_DIR)/stage2.map -o $@ $^ -lgcc
 
 $(BUILD_DIR)/stage2/c/%.obj: %.c
 	mkdir -p $(@D)
