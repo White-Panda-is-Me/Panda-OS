@@ -1,0 +1,62 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD /Users/mohammad/programming/assembly/bootloader/build/stage2/asm/entry.obj
+LOAD /Users/mohammad/programming/assembly/bootloader/build/stage2/asm/x86_func.obj
+LOAD /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
+LOAD /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a
+                0x00007e00                        . = 0x7e00
+
+.entry          0x00007e00       0x80
+                0x00007e00                        __entry_start = .
+ *(.entry)
+ .entry         0x00007e00       0x80 /Users/mohammad/programming/assembly/bootloader/build/stage2/asm/entry.obj
+
+.text           0x00007e80        0x9
+ *(.text)
+ .text          0x00007e80        0x1 /Users/mohammad/programming/assembly/bootloader/build/stage2/asm/x86_func.obj
+                0x00007e80                x86_func
+ .text          0x00007e81        0x8 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
+                0x00007e81                main
+ *(.rodata)
+
+.data           0x00007e89        0x0
+ *(.data)
+ .data          0x00007e89        0x0 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
+
+.bss            0x00007e89        0x0
+ *(.bss)
+ .bss           0x00007e89        0x0 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
+OUTPUT(/Users/mohammad/programming/assembly/bootloader/build/stage2.bin binary)
+
+.debug_info     0x00000000       0x7f
+ .debug_info    0x00000000       0x7f /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
+
+.debug_abbrev   0x00000000       0x41
+ .debug_abbrev  0x00000000       0x41 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
+
+.debug_aranges  0x00000000       0x20
+ .debug_aranges
+                0x00000000       0x20 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
+
+.debug_line     0x00000000       0x4c
+ .debug_line    0x00000000       0x4c /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
+
+.debug_str      0x00000000       0xd4
+ .debug_str     0x00000000       0xd4 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
+
+.debug_line_str
+                0x00000000       0xa1
+ .debug_line_str
+                0x00000000       0xa1 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
+
+.comment        0x00000000       0x13
+ .comment       0x00000000       0x13 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
+
+.debug_frame    0x00000000       0x2c
+ .debug_frame   0x00000000       0x2c /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
