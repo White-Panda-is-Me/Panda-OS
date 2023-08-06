@@ -1,6 +1,7 @@
 [bits 16]
 
 section .entry
+global entry
 entry:
     [bits 16]
     ; setting up segment ans stack registers
