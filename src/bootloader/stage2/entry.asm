@@ -1,6 +1,7 @@
-bits 16
-org 0x7E00
+[bits 16]
 
+section .text
+    global entry
 entry:
     [bits 16]
     ; setting up segment ans stack registers
@@ -38,7 +39,7 @@ Pmode:
     mov edi, 0xB8000
     mov byte [edi], 'A'
     inc edi
-    mov byte edi, 0xF4
+    mov edi, 0x0000F4
 
 
 .halt:

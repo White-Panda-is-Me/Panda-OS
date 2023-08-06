@@ -1,0 +1,1 @@
+void __attribute((cdecl)) x86_func();
