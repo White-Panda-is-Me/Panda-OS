@@ -1,29 +1,16 @@
-ENTRY(_start);
+ENTRY(entry)
+
 SECTIONS
-{    
-    . = 0x7E00;    
-    .text : AT(0x7E00)
+{
+    . = 0x7E00;
+    .text ALIGN(0x1000) :
     {
-        _text = .;
-        *(.text);
-        _text_end = .;
+        *(.text)
+        *(.rodata)
     }
-    .data :
+
+    .data ALIGN(0x1000) :
     {
-        _data = .;
-        *(.bss);
-        *(.bss*);
-        *(.data);
-        *(.rodata*);
-        *(COMMON)
-        _data_end = .;
-    }
-    /DISCARD/ :
-    {
-        *(.note*);
-        *(.iplt*);
-        *(.igot*);
-        *(.rel*);
-        *(.comment);  
+        *(.data)
     }
 }

@@ -1,10 +1,6 @@
 [bits 16]
 
-section .text
-
-extern main
-global _start
-_start:
+entry:
     [bits 16]
     ; setting up segment ans stack registers
     cli
@@ -28,16 +24,14 @@ _start:
 
     jmp 08h:Pmode
 
+[bits 32]
 Pmode:
-    [bits 32]
     mov ax, 0x10
     mov ds, ax
     mov es, ax
     mov ss, ax
     mov fs, ax
     mov gs, ax
-
-    ; call main
 
 .halt:
     jmp .halt

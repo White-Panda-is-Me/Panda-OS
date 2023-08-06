@@ -27,7 +27,7 @@ entry:
 
 	mov dl, [drive_num]
 	mov ah, 02h
-	mov al, 0Ch
+	mov al, 01h
 	mov ch, 00h
 	mov cl, 02h
 	mov dh, 00h
@@ -91,7 +91,7 @@ disk_read_err:
 	call puts
 
 drive_num: 					db 0
-msg: 						db "Welcome to MAMMAD OS", endl, 0
+msg: 						db "Welcome to IDK OS", endl, 0
 reading_disk_err_msg:		db "Error Reading Sectors into memory", endl, 0
 done_reading_disk:			db "Reading sectors into memory done!", endl, 0
 STAGE2_LOAD_OFFSET: 		equ 0x7E00
