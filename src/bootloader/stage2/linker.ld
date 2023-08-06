@@ -1,8 +1,8 @@
-ENTRY(main);
+ENTRY(_start);
 SECTIONS
 {    
-    . = 0x7C00;    
-    .text : AT(0x7C00)
+    . = 0x7E00;    
+    .text : AT(0x7E00)
     {
         _text = .;
         *(.text);
@@ -17,11 +17,7 @@ SECTIONS
         *(.rodata*);
         *(COMMON)
         _data_end = .;
-    }    
-    .sig : AT(0x7DFE)    
-    {        
-        SHORT(0xaa55);
-    }    
+    }
     /DISCARD/ :
     {
         *(.note*);

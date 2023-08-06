@@ -1,4 +1,4 @@
-BUILD_DIR=build
+export BUILD_DIR=$(abspath build)
 SRC_DIR=src
 ASM=nasm
 
@@ -7,7 +7,7 @@ ASM=nasm
 disk: $(BUILD_DIR)/disk.img
 
 $(BUILD_DIR)/disk.img: bootloader kernel
-	cat $(BUILD_DIR)/stage1.bin $(BUILD_DIR)/stage2.bin $(BUILD_DIR)/kernel.bin > $(BUILD_DIR)/disk.img
+	cat $(BUILD_DIR)/stage1.bin $(BUILD_DIR)/stage2.bin > $(BUILD_DIR)/disk.img
 	dd if=/dev/zero bs=512 count=2880 >> $(BUILD_DIR)/disk.img
 
 
@@ -22,6 +22,7 @@ bootloader: stage1 stage2
 stage1: $(BUILD_DIR)/stage1.bin
 
 $(BUILD_DIR)/stage1.bin: $(SRC_DIR)/bootloader/stage1/stage1.asm
+	mkdir build
 	$(ASM) -g $(SRC_DIR)/bootloader/stage1/stage1.asm -f bin -o $(BUILD_DIR)/stage1.bin
 
 stage2: $(BUILD_DIR)/stage2.bin
@@ -59,6 +60,4 @@ run:
 # # # # # # # # # #
 
 clean:
-	rm $(BUILD_DIR)/disk.img
-	rm $(BUILD_DIR)/stage1.bin
-	rm $(BUILD_DIR)/kernel.bin
+	rm -r $(BUILD_DIR)

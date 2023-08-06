@@ -1,2 +1,2 @@
 set disassembly-flavor intel
-target remote | qemu-system-i386 -S -gdb stdio -m 32 -fda build/boot.bin
+target remote | qemu-system-i386 -S -gdb stdio -m 32 -fda build/disk.img

@@ -1,8 +1,10 @@
 [bits 16]
 
 section .text
-    global entry
-entry:
+
+extern main
+global _start
+_start:
     [bits 16]
     ; setting up segment ans stack registers
     cli
@@ -16,7 +18,6 @@ entry:
     mov si, msg1
     call puts
     cli
-
     ; now time to load the GDT
     lgdt [GDT_desc]
 
@@ -36,11 +37,7 @@ Pmode:
     mov fs, ax
     mov gs, ax
 
-    mov edi, 0xB8000
-    mov byte [edi], 'A'
-    inc edi
-    mov edi, 0x0000F4
-
+    ; call main
 
 .halt:
     jmp .halt
@@ -69,6 +66,7 @@ GDT_desc:
     dw GDT_desc - GDT - 1
     dd GDT
 
+
 puts:
     mov ah, 0Eh
 	jmp .loop
@@ -83,5 +81,4 @@ puts:
 .done:
     ret
 
-msg1:                        db "Stage2 Loaded successfully!", 0xD, 0xA, 0
-Vid_mem:                     equ 0xB8000
+msg1:                        db "Stage2 Loaded successfully!", 0
