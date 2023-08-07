@@ -1,14 +1,10 @@
 #include <stdint.h>
 #include "x86.h"
+#include "stdio.h"
 
 void main() {
-    // uint8_t* vid_mem = (uint8_t*) 0xB8002;
-    // *vid_mem = 'A';
-    // vid_mem++;
-    // *vid_mem = 0x48;
-
-    __asm__("cli");
-    __asm__("hlt");
-
+    clearScr();
+    puts("stage2 Loaded Successfully!\n");
+    puts("Switching language to C...\tDone!\n");
     while(1) {}
 }

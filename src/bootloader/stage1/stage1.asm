@@ -4,6 +4,7 @@ bits 16
 %define endl 0x0D, 0x0A
 
 entry:
+	; setting up stack and segment registers
 	cli
 	xor ax, ax
 	mov ds, ax
@@ -12,37 +13,46 @@ entry:
 	mov sp, 0x7C00
 	sti
 
+	; set up video mode
 	xor ah, ah
 	mov al, 03h
 	int 10h
 
+	; expect drive number in dl
 	mov [drive_num], dl
+	; enable a20 gate so we can use more than 1MB of RAM
 	call EnableA20
 
+	; reset the disk
 	mov ah, 0
 	int 13h
 
 	mov si, msg
 	call puts
 
+	; reading the stage2 into memory
 	mov dl, [drive_num]
 	mov ah, 02h
-	mov al, 01h
+	mov al, 03h
 	mov ch, 00h
 	mov cl, 02h
 	mov dh, 00h
 	mov bx, STAGE2_LOAD_SEGMENT
 	mov es, bx
 	mov bx, STAGE2_LOAD_OFFSET
+	; load stage2.bin into address 0x0000:7E00 (es:bx)
 
 	int 13h
 	jc disk_read_err
 	
+	; reading into memory done!
 	mov si, done_reading_disk
 	call puts
 
+	;now jump to the stage2 address into the memory
 	jmp STAGE2_LOAD_SEGMENT:STAGE2_LOAD_OFFSET
 
+; puts function
 puts:
     mov ah, 0Eh
 	jmp .loop
@@ -57,27 +67,28 @@ puts:
 .done:
     ret
 
+; A20 Gate enable
 EnableA20:
     ; First, check if A20 is already enabled
-    in al, 0x92         ; Read the system control port B
-    test al, 2          ; Test the A20 enable bit (bit 1)
-    jnz A20AlreadyEnabled   ; Jump if A20 is already enabled
+    in al, 0x92
+    test al, 2
+    jnz A20AlreadyEnabled
 
     ; A20 is not enabled, so enable it
-    cli                 ; Disable interrupts
+    cli
 
     ; Send the unlock sequence to the keyboard controller
-    mov al, 0xd1        ; Command to write to the input buffer
+    mov al, 0xd1
     out 0x64, al
-    in al, 0x60         ; Wait for the keyboard controller to be ready
+    in al, 0x60
     test al, 2
-    jnz $               ; Keep waiting if the controller is not ready
+    jnz $
 
-    mov al, 0xdf        ; A20 enable bit mask (bit 1 set)
-    out 0x60, al        ; Write the A20 enable bit to the input buffer
-    in al, 0x60         ; Wait for the keyboard controller to be ready
+    mov al, 0xdf
+    out 0x60, al
+    in al, 0x60
     test al, 2
-    jnz $               ; Keep waiting if the controller is not ready
+    jnz $
 
     ; A20 is now enabled
     sti
@@ -86,6 +97,7 @@ EnableA20:
 A20AlreadyEnabled:
     ret
 
+; error handling
 disk_read_err:
 	mov si, reading_disk_err_msg
 	call puts

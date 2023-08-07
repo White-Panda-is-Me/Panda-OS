@@ -50,7 +50,7 @@ $(BUILD_DIR)/kernel.bin: $(SRC_DIR)/kernel/kernel.asm
 # # # # # # # # # #
 
 run:
-	qemu-system-i386 -fda $(BUILD_DIR)/disk.img
+	qemu-system-x86_64 -fda $(BUILD_DIR)/disk.img
 
 
 # # # # # # # # # #

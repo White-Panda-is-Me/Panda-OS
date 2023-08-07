@@ -1,6 +1,8 @@
 [bits 16]
 
 section .entry
+extern main
+
 global entry
 entry:
     [bits 16]
@@ -34,6 +36,8 @@ Pmode:
     mov ss, ax
     mov fs, ax
     mov gs, ax
+
+    call main
 
 .halt:
     jmp .halt
