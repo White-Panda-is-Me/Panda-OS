@@ -91,10 +91,8 @@ void puts(const char* str) {
 }
 
 //
-// The main function goes here witch is printf!
+// The main function goes here which is printf!
 //
-
-
 
 #define PRINTF_STATE_NORMAL         0
 #define PRINTF_STATE_LENGTH         1
