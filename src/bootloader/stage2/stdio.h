@@ -1,4 +1,6 @@
 #include <stdint.h>
+#include <stdarg.h>
+#include <stdbool.h>
 
 void clearScr();
 void setCurPos(uint8_t x, uint8_t y);

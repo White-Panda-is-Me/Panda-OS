@@ -33,7 +33,7 @@ entry:
 	; reading the stage2 into memory
 	mov dl, [drive_num]
 	mov ah, 02h
-	mov al, 03h
+	mov al, 07h
 	mov ch, 00h
 	mov cl, 02h
 	mov dh, 00h
