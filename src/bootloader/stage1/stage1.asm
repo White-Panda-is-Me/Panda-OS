@@ -40,7 +40,7 @@ entry:
 	mov bx, STAGE2_LOAD_SEGMENT
 	mov es, bx
 	mov bx, STAGE2_LOAD_OFFSET
-	; load stage2.bin into address 0x0000:7E00 (es:bx)
+	; ; load stage2.bin into address 0x0000:7E00 (es:bx)
 
 	int 13h
 	jc disk_read_err
@@ -49,11 +49,34 @@ entry:
 	mov si, done_reading_disk
 	call puts
 
+	; again reset the disk
+	mov ah, 0
+	int 13h
+
+	; reading the kernel into memory
+	mov dl, [drive_num]
+	mov ah, 02h
+	mov al, 01h
+	mov ch, 00h
+	mov cl, 08h
+	mov dh, 01h
+	mov bx, KERNEL_LOAD_SEGMENT
+	mov es, bx
+	mov bx, KERNEL_LOAD_OFFSET
+	; load kernel.bin into address 0x1000:0000 (es:bx)
+
+	int 13h
+	jc disk_read_err
+
 	;now jump to the stage2 address into the memory
-	jmp STAGE2_LOAD_SEGMENT:STAGE2_LOAD_OFFSET
+	jmp KERNEL_LOAD_SEGMENT:KERNEL_LOAD_OFFSET
+
+	cli
+	hlt
 
 ; puts function
 puts:
+	pusha
     mov ah, 0Eh
 	jmp .loop
 
@@ -65,10 +88,12 @@ puts:
 	jmp .loop
 
 .done:
+	popa
     ret
 
 ; A20 Gate enable
 EnableA20:
+	pusha
     ; First, check if A20 is already enabled
     in al, 0x92
     test al, 2
@@ -91,10 +116,12 @@ EnableA20:
     jnz $
 
     ; A20 is now enabled
+	popa
     sti
     ret
 
 A20AlreadyEnabled:
+	popa
     ret
 
 ; error handling
@@ -103,11 +130,14 @@ disk_read_err:
 	call puts
 
 drive_num: 					db 0
-msg: 						db "Welcome to IDK OS", endl, 0
+msg: 						db "Welcome to SOMEONE OS", endl, 0
 reading_disk_err_msg:		db "Error Reading Sectors into memory", endl, 0
 done_reading_disk:			db "Reading sectors into memory done!", endl, 0
 STAGE2_LOAD_OFFSET: 		equ 0x7E00
 STAGE2_LOAD_SEGMENT:		equ 0x0000
+
+KERNEL_LOAD_OFFSET: 		equ 0x0000
+KERNEL_LOAD_SEGMENT:		equ 0x1000
 
 times 510 - ($ - $$) db 0
 dw 0xAA55

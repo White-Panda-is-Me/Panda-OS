@@ -8,5 +8,5 @@ void main() {
     printf("stage2 Loaded Successfully!\n");
     printf("Switching to 32 bit Pmode...\tDone!\n");
     printf("Switching language to C...\tDone!\n");
-    while(1) {}
+    printf("Loading Kernel...\t");
 }

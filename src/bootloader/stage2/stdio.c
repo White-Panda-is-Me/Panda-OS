@@ -109,13 +109,11 @@ void puts(const char* str) {
 
 const char g_HexChars[] = "0123456789abcdef";
 
-void printf_unsigned(unsigned long long number, int radix)
-{
+void printf_unsigned(unsigned long long number, int radix) {
     char buffer[32];
     int pos = 0;
 
-    do 
-    {
+    do {
         unsigned long long rem = number % radix;
         number /= radix;
         buffer[pos++] = g_HexChars[rem];

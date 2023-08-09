@@ -1,33 +1,17 @@
-bits 16
+bits 32
 
-%define endl 0x0D, 0x0A
+section .kentry
 
-entry:
-    cli
-    mov ax, 0x1000
+global kentry
+kentry:
+    mov ax, 0x08
     mov es, ax
     mov ds, ax
     mov ss, ax
-    sti
+    mov gs, ax
+    mov fs, ax
 
-    mov si, msg1
-    call puts
-    
 .halt:
     jmp .halt
 
-puts:
-    mov ah, 0Eh
-	jmp .loop
-
-.loop:
-	lodsb
-	cmp al, 0
-	je .done
-    int 10h
-	jmp .loop
-
-.done:
-    ret
-
-msg1: db "Kernel loaded successfully!", endl, 0
+msg: db "h", 0

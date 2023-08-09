@@ -2,7 +2,7 @@
 
 section .entry
 extern main
-
+extern putc
 global entry
 entry:
     [bits 16]
@@ -13,11 +13,7 @@ entry:
     mov ds, ax
     mov ss, ax
     mov sp, 0x7E00
-    sti
 
-    mov si, msg1
-    call puts
-    cli
     ; now time to load the GDT
     lgdt [GDT_desc]
 
@@ -38,6 +34,11 @@ Pmode:
     mov gs, ax
 
     call main
+
+    jmp KERNEL_LOAD_SEGMENT:KERNEL_LOAD_OFFSET
+
+    ; cli
+    hlt
 
 .halt:
     jmp .halt
@@ -66,19 +67,6 @@ GDT_desc:
     dw GDT_desc - GDT - 1
     dd GDT
 
-
-puts:
-    mov ah, 0Eh
-	jmp .loop
-
-.loop:
-	lodsb
-	cmp al, 0
-	je .done
-    int 10h
-	jmp .loop
-
-.done:
-    ret
-
 msg1:                        db "Stage2 Loaded successfully!", 0
+KERNEL_LOAD_OFFSET: 		 equ 0x0000
+KERNEL_LOAD_SEGMENT:		 equ 0x1000

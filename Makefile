@@ -1,5 +1,7 @@
 export BUILD_DIR=$(abspath build)
 SRC_DIR=src
+FORMAT=format
+COPY=copy
 ASM=nasm
 
 .PHONY: run
@@ -7,9 +9,10 @@ ASM=nasm
 disk: $(BUILD_DIR)/disk.img
 
 $(BUILD_DIR)/disk.img: bootloader kernel
-	cat $(BUILD_DIR)/stage1.bin $(BUILD_DIR)/stage2.bin > $(BUILD_DIR)/disk.img
-	dd if=/dev/zero bs=512 count=2880 >> $(BUILD_DIR)/disk.img
-
+	$(FORMAT) ./build/disk.img
+	$(COPY) ./build/disk.img ./build/stage1.bin
+	$(COPY) ./build/disk.img ./build/stage2.bin
+	$(COPY) ./build/disk.img ./build/kernel.bin
 
 # # # # # # # # # #
 #                 #
@@ -40,7 +43,7 @@ $(BUILD_DIR)/stage2.bin: $(SRC_DIR)/bootloader/stage2
 kernel: $(BUILD_DIR)/kernel.bin
 
 $(BUILD_DIR)/kernel.bin: $(SRC_DIR)/kernel/kernel.asm
-	$(ASM) -g $(SRC_DIR)/kernel/kernel.asm -f bin -o $(BUILD_DIR)/kernel.bin
+	$(MAKE) -C $(SRC_DIR)/kernel
 
 
 # # # # # # # # # #

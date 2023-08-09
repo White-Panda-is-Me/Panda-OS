@@ -1,0 +1,28 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD /Users/mohammad/programming/assembly/bootloader/build/kernel/asm/kernel.obj
+LOAD /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a
+                0x00100000                        . = 0x100000
+
+.kentry         0x00100000       0x12
+                0x00100000                        __entry_start = .
+ *(.kentry)
+ .kentry        0x00100000       0x12 /Users/mohammad/programming/assembly/bootloader/build/kernel/asm/kernel.obj
+                0x00100000                kentry
+
+.text
+ *(.text)
+ *(.rodata)
+
+.data
+ *(.data)
+
+.bss
+ *(.bss)
+OUTPUT(/Users/mohammad/programming/assembly/bootloader/build/kernel.bin binary)

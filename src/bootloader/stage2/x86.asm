@@ -15,3 +15,6 @@ x86_inb:
     in al, dx
 
     ret
+
+Rmode:
+    ret
