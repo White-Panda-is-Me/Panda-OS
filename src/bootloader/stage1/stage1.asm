@@ -69,7 +69,7 @@ entry:
 	jc disk_read_err
 
 	;now jump to the stage2 address into the memory
-	jmp KERNEL_LOAD_SEGMENT:KERNEL_LOAD_OFFSET
+	jmp STAGE2_LOAD_SEGMENT:STAGE2_LOAD_OFFSET
 
 	cli
 	hlt
@@ -130,7 +130,7 @@ disk_read_err:
 	call puts
 
 drive_num: 					db 0
-msg: 						db "Welcome to SOMEONE OS", endl, 0
+msg: 						db "Welcome to panda OS", endl, 0
 reading_disk_err_msg:		db "Error Reading Sectors into memory", endl, 0
 done_reading_disk:			db "Reading sectors into memory done!", endl, 0
 STAGE2_LOAD_OFFSET: 		equ 0x7E00

@@ -1,10 +1,10 @@
-bits 32
+[bits 32]
 
 section .kentry
 
 global kentry
 kentry:
-    mov ax, 0x08
+    mov ax, 0x1000
     mov es, ax
     mov ds, ax
     mov ss, ax

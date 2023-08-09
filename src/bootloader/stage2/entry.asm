@@ -37,7 +37,6 @@ Pmode:
 
     jmp KERNEL_LOAD_SEGMENT:KERNEL_LOAD_OFFSET
 
-    ; cli
     hlt
 
 .halt:
