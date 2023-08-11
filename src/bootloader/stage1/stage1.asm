@@ -1,6 +1,18 @@
 org 0x7c00
 bits 16
 
+jmp short entry
+
+
+;
+; mlfs entry :stage1
+;
+
+mlfs_entry:		db "stage1.bin"
+times 21 		db 0
+inode_num: 		dw 1
+
+
 %define endl 0x0D, 0x0A
 
 entry:
@@ -48,25 +60,6 @@ entry:
 	; reading into memory done!
 	mov si, done_reading_disk
 	call puts
-
-	; again reset the disk
-	mov ah, 0
-	int 13h
-
-	; reading the kernel into memory
-	mov dl, [drive_num]
-	mov ah, 02h
-	mov al, 01h
-	mov ch, 00h
-	mov cl, 08h
-	mov dh, 01h
-	mov bx, KERNEL_LOAD_SEGMENT
-	mov es, bx
-	mov bx, KERNEL_LOAD_OFFSET
-	; load kernel.bin into address 0x1000:0000 (es:bx)
-
-	int 13h
-	jc disk_read_err
 
 	;now jump to the stage2 address into the memory
 	jmp STAGE2_LOAD_SEGMENT:STAGE2_LOAD_OFFSET
@@ -135,9 +128,6 @@ reading_disk_err_msg:		db "Error Reading Sectors into memory", endl, 0
 done_reading_disk:			db "Reading sectors into memory done!", endl, 0
 STAGE2_LOAD_OFFSET: 		equ 0x7E00
 STAGE2_LOAD_SEGMENT:		equ 0x0000
-
-KERNEL_LOAD_OFFSET: 		equ 0x0000
-KERNEL_LOAD_SEGMENT:		equ 0x1000
 
 times 510 - ($ - $$) db 0
 dw 0xAA55

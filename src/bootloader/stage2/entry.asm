@@ -2,9 +2,9 @@
 
 section .entry
 extern main
-extern putc
 global entry
 entry:
+    pusha
     [bits 16]
     ; setting up segment ans stack registers
     cli
@@ -13,6 +13,32 @@ entry:
     mov ds, ax
     mov ss, ax
     mov sp, 0x7E00
+    sti
+
+    ; mov ah, 0
+    ; int 13h
+
+    ; expect drive number in dl
+	mov [drive_num], dl
+
+	; reading the KERNEL into memory
+	mov dl, [drive_num]
+	mov ah, 02h
+	mov al, 08h
+	mov ch, 00h
+	mov cl, 09h
+	mov dh, 00h
+	mov bx, KERNEL_LOAD_SEGMENT
+	mov es, bx
+	mov bx, KERNEL_LOAD_OFFSET
+	; ; load KERNEL.bin into address 0x10000 (es:bx)
+
+	int 13h
+    jc disk_read_err
+    xor al, al
+    push ax
+
+    cli
 
     ; now time to load the GDT
     lgdt [GDT_desc]
@@ -35,9 +61,8 @@ Pmode:
 
     call main
 
-    jmp KERNEL_LOAD_SEGMENT:KERNEL_LOAD_OFFSET
-
-    hlt
+    popa
+    jmp 0x8:KERNEL_LOAD_OFFSET
 
 .halt:
     jmp .halt
@@ -66,6 +91,11 @@ GDT_desc:
     dw GDT_desc - GDT - 1
     dd GDT
 
-msg1:                        db "Stage2 Loaded successfully!", 0
-KERNEL_LOAD_OFFSET: 		 equ 0x0000
-KERNEL_LOAD_SEGMENT:		 equ 0x1000
+disk_read_err:
+    cli
+    hlt
+
+drive_num:                   db 0
+msg1:                        db "KERNEL Loaded successfully!", 0
+KERNEL_LOAD_OFFSET: 		 equ 0x1000
+KERNEL_LOAD_SEGMENT:		 equ 0x0000

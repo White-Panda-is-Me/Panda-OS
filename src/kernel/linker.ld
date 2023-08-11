@@ -3,11 +3,11 @@ OUTPUT_FORMAT("binary")
 
 SECTIONS
 {
-    . = 0x100000;
-    .kentry :
+    . = 0x1000;
+    .entry :
     {
         __entry_start = .;
-        *(.kentry)
+        *(.entry)
     }
     .text :
     {

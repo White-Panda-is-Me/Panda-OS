@@ -1,9 +1,9 @@
 Archive member included to satisfy reference by file (symbol)
 
 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_udivdi3.o)
-                              /Users/mohammad/programming/assembly/bootloader/build/stage2/c/stdio.obj (__udivdi3)
+                              ../../../build/util/c/stdio.obj (__udivdi3)
 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_umoddi3.o)
-                              /Users/mohammad/programming/assembly/bootloader/build/stage2/c/stdio.obj (__umoddi3)
+                              ../../../build/util/c/stdio.obj (__umoddi3)
 
 Memory Configuration
 
@@ -13,122 +13,124 @@ Name             Origin             Length             Attributes
 Linker script and memory map
 
 LOAD /Users/mohammad/programming/assembly/bootloader/build/stage2/asm/entry.obj
-LOAD /Users/mohammad/programming/assembly/bootloader/build/stage2/asm/x86.obj
 LOAD /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
-LOAD /Users/mohammad/programming/assembly/bootloader/build/stage2/c/stdio.obj
+LOAD ../../../build/util/c/stdio.obj
+LOAD ../../../build/util/asm/x86.obj
 LOAD /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a
                 0x00007e00                        . = 0x7e00
 
-.entry          0x00007e00       0x77
+.entry          0x00007e00       0x9e
                 0x00007e00                        __entry_start = .
  *(.entry)
- .entry         0x00007e00       0x77 /Users/mohammad/programming/assembly/bootloader/build/stage2/asm/entry.obj
+ .entry         0x00007e00       0x9e /Users/mohammad/programming/assembly/bootloader/build/stage2/asm/entry.obj
                 0x00007e00                entry
 
-.eh_frame       0x00007e78       0xd8
- .eh_frame      0x00007e78       0x64 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_udivdi3.o)
- .eh_frame      0x00007edc       0x74 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_umoddi3.o)
+.eh_frame       0x00007ea0       0xd8
+ .eh_frame      0x00007ea0       0x64 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_udivdi3.o)
+ .eh_frame      0x00007f04       0x74 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_umoddi3.o)
 
-.text           0x00007f50      0xb58
+.text           0x00007f80      0xc0c
  *(.text)
- .text          0x00007f50       0x15 /Users/mohammad/programming/assembly/bootloader/build/stage2/asm/x86.obj
-                0x00007f50                x86_outb
-                0x00007f5b                x86_inb
- .text          0x00007f65       0x6f /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
-                0x00007f65                main
- .text          0x00007fd4      0x73a /Users/mohammad/programming/assembly/bootloader/build/stage2/c/stdio.obj
-                0x00007fd4                getCurPos
-                0x00008048                setCurPos
-                0x000080cf                cursor2VGA
-                0x00008115                clearScr
-                0x0000817e                putc
-                0x000082a6                puts
-                0x000082d5                printf_unsigned
-                0x00008379                printf_signed
-                0x000083d6                printf
- *fill*         0x0000870e        0x2 
- .text          0x00008710      0x11a /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_udivdi3.o)
-                0x00008710                __udivdi3
- *fill*         0x0000882a        0x6 
- .text          0x00008830      0x136 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_umoddi3.o)
-                0x00008830                __umoddi3
+ .text          0x00007f80       0x6f /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
+                0x00007f80                main
+ .text          0x00007fef      0x7d3 ../../../build/util/c/stdio.obj
+                0x00007fef                getCurPos
+                0x00008063                setCurPos
+                0x000080ea                cursor2VGA
+                0x00008130                clearScr
+                0x00008199                putc
+                0x000082c1                puts
+                0x000082f0                printf_unsigned
+                0x00008394                printf_signed
+                0x000083f1                print_buffer
+                0x0000848a                printf
+ *fill*         0x000087c2        0xe 
+ .text          0x000087d0       0x14 ../../../build/util/asm/x86.obj
+                0x000087d0                x86_outb
+                0x000087db                x86_inb
+ *fill*         0x000087e4        0xc 
+ .text          0x000087f0      0x11a /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_udivdi3.o)
+                0x000087f0                __udivdi3
+ *fill*         0x0000890a        0x6 
+ .text          0x00008910      0x136 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_umoddi3.o)
+                0x00008910                __umoddi3
  *(.rodata)
- *fill*         0x00008966        0x2 
- .rodata        0x00008968       0x8d /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
- *fill*         0x000089f5        0x3 
- .rodata        0x000089f8       0xb0 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/stdio.obj
-                0x000089f8                g_HexChars
+ *fill*         0x00008a46        0x2 
+ .rodata        0x00008a48       0x8d /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
+ *fill*         0x00008ad5        0x3 
+ .rodata        0x00008ad8       0xb4 ../../../build/util/c/stdio.obj
+                0x00008ad8                g_HexChars
 
-.data           0x00008aa8        0x4
+.data           0x00008b8c        0x4
  *(.data)
- .data          0x00008aa8        0x0 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
- .data          0x00008aa8        0x4 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/stdio.obj
-                0x00008aa8                vid_mem
- .data          0x00008aac        0x0 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_udivdi3.o)
- .data          0x00008aac        0x0 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_umoddi3.o)
+ .data          0x00008b8c        0x0 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
+ .data          0x00008b8c        0x4 ../../../build/util/c/stdio.obj
+                0x00008b8c                vid_mem
+ .data          0x00008b90        0x0 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_udivdi3.o)
+ .data          0x00008b90        0x0 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_umoddi3.o)
 
-.bss            0x00008aac        0x0
+.bss            0x00008b90        0x0
  *(.bss)
- .bss           0x00008aac        0x0 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
- .bss           0x00008aac        0x0 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/stdio.obj
- .bss           0x00008aac        0x0 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_udivdi3.o)
- .bss           0x00008aac        0x0 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_umoddi3.o)
+ .bss           0x00008b90        0x0 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
+ .bss           0x00008b90        0x0 ../../../build/util/c/stdio.obj
+ .bss           0x00008b90        0x0 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_udivdi3.o)
+ .bss           0x00008b90        0x0 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_umoddi3.o)
 OUTPUT(/Users/mohammad/programming/assembly/bootloader/build/stage2.bin binary)
 
-.debug_info     0x00000000      0xaaa
+.debug_info     0x00000000      0xb29
  .debug_info    0x00000000       0xb2 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
- .debug_info    0x000000b2      0x389 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/stdio.obj
- .debug_info    0x0000043b      0x32c /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_udivdi3.o)
- .debug_info    0x00000767      0x343 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_umoddi3.o)
+ .debug_info    0x000000b2      0x408 ../../../build/util/c/stdio.obj
+ .debug_info    0x000004ba      0x32c /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_udivdi3.o)
+ .debug_info    0x000007e6      0x343 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_umoddi3.o)
 
-.debug_abbrev   0x00000000      0x4ce
+.debug_abbrev   0x00000000      0x4d3
  .debug_abbrev  0x00000000       0x85 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
- .debug_abbrev  0x00000085      0x17d /Users/mohammad/programming/assembly/bootloader/build/stage2/c/stdio.obj
- .debug_abbrev  0x00000202      0x15b /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_udivdi3.o)
- .debug_abbrev  0x0000035d      0x171 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_umoddi3.o)
+ .debug_abbrev  0x00000085      0x182 ../../../build/util/c/stdio.obj
+ .debug_abbrev  0x00000207      0x15b /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_udivdi3.o)
+ .debug_abbrev  0x00000362      0x171 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_umoddi3.o)
 
 .debug_aranges  0x00000000       0x80
  .debug_aranges
                 0x00000000       0x20 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
  .debug_aranges
-                0x00000020       0x20 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/stdio.obj
+                0x00000020       0x20 ../../../build/util/c/stdio.obj
  .debug_aranges
                 0x00000040       0x20 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_udivdi3.o)
  .debug_aranges
                 0x00000060       0x20 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_umoddi3.o)
 
-.debug_line     0x00000000      0x675
- .debug_line    0x00000000       0x56 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
- .debug_line    0x00000056      0x2ce /Users/mohammad/programming/assembly/bootloader/build/stage2/c/stdio.obj
- .debug_line    0x00000324      0x180 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_udivdi3.o)
- .debug_line    0x000004a4      0x1d1 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_umoddi3.o)
+.debug_line     0x00000000      0x6b4
+ .debug_line    0x00000000       0x5a /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
+ .debug_line    0x0000005a      0x309 ../../../build/util/c/stdio.obj
+ .debug_line    0x00000363      0x180 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_udivdi3.o)
+ .debug_line    0x000004e3      0x1d1 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_umoddi3.o)
 
-.debug_str      0x00000000      0x682
+.debug_str      0x00000000      0x6a7
  .debug_str     0x00000000       0xe9 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
- .debug_str     0x000000e9      0x1d3 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/stdio.obj
- .debug_str     0x000002bc      0x1e3 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_udivdi3.o)
- .debug_str     0x0000049f      0x1e3 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_umoddi3.o)
+ .debug_str     0x000000e9      0x1f8 ../../../build/util/c/stdio.obj
+ .debug_str     0x000002e1      0x1e3 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_udivdi3.o)
+ .debug_str     0x000004c4      0x1e3 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_umoddi3.o)
 
 .debug_line_str
-                0x00000000      0x3a5
+                0x00000000      0x396
  .debug_line_str
-                0x00000000       0xa9 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
+                0x00000000       0xb4 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
  .debug_line_str
-                0x000000a9      0x118 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/stdio.obj
+                0x000000b4       0xfe ../../../build/util/c/stdio.obj
  .debug_line_str
-                0x000001c1       0xf2 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_udivdi3.o)
+                0x000001b2       0xf2 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_udivdi3.o)
  .debug_line_str
-                0x000002b3       0xf2 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_umoddi3.o)
+                0x000002a4       0xf2 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_umoddi3.o)
 
 .comment        0x00000000       0x4c
  .comment       0x00000000       0x13 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
- .comment       0x00000013       0x13 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/stdio.obj
+ .comment       0x00000013       0x13 ../../../build/util/c/stdio.obj
  .comment       0x00000026       0x13 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_udivdi3.o)
  .comment       0x00000039       0x13 /Users/mohammad/programming/MAMMD_OS/toolchain/i686-elf/lib/gcc/i686-elf/13.1.0/libgcc.a(_umoddi3.o)
 
-.debug_frame    0x00000000      0x17c
+.debug_frame    0x00000000      0x19c
  .debug_frame   0x00000000       0x40 /Users/mohammad/programming/assembly/bootloader/build/stage2/c/main.obj
- .debug_frame   0x00000040      0x13c /Users/mohammad/programming/assembly/bootloader/build/stage2/c/stdio.obj
+ .debug_frame   0x00000040      0x15c ../../../build/util/c/stdio.obj
 
 .debug_loclists
                 0x00000000      0x978
