@@ -6,6 +6,10 @@ uint8_t* vid_mem = (uint8_t*) 0xB8000;
 #define SCREEN_HEIGHT 25
 #define DEFAULT_COLOR 0x3F
 
+void set_vid_mem(uint8_t* mem) {
+    vid_mem = mem;
+}
+
 // // // // // // // // // //
 //                         //
 //     cursor handling     //

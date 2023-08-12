@@ -8,7 +8,7 @@ COBJFILES=$(patsubst %.c, $(BUILD_DIR)/stage2/c/%.obj, $(CFILES))
 ASMOBJFILES=$(patsubst %.asm, $(BUILD_DIR)/stage2/asm/%.obj, $(ASMFILES))
 UTIL_COBJFILES=$(shell find -f ../../../build/util/c/*.obj)
 UTIL_ASMOBJFILES=$(shell find -f ../../../build/util/asm/*.obj)
-CFLAGS=-std=c99 -g -ffreestanding -nostdlib -Wall -Werror -I../util
+CFLAGS=-std=c99 -g -ffreestanding -nostdlib -Wall -Werror -I../../util
 LDFLAGS=-T linker.ld -nostdlib
 
 .PHONY: all stage2 clean always

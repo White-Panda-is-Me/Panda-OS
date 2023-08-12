@@ -15,14 +15,7 @@ entry:
     mov sp, 0x7E00
     sti
 
-    ; mov ah, 0
-    ; int 13h
-
-    ; expect drive number in dl
-	mov [drive_num], dl
-
 	; reading the KERNEL into memory
-	mov dl, [drive_num]
 	mov ah, 02h
 	mov al, 08h
 	mov ch, 00h
@@ -31,12 +24,10 @@ entry:
 	mov bx, KERNEL_LOAD_SEGMENT
 	mov es, bx
 	mov bx, KERNEL_LOAD_OFFSET
-	; ; load KERNEL.bin into address 0x10000 (es:bx)
+	; load KERNEL.bin into address 0x1000 (es:bx)
 
 	int 13h
     jc disk_read_err
-    xor al, al
-    push ax
 
     cli
 
@@ -60,8 +51,8 @@ Pmode:
     mov gs, ax
 
     call main
-
     popa
+    push ax
     jmp 0x8:KERNEL_LOAD_OFFSET
 
 .halt:

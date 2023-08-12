@@ -1,6 +1,6 @@
 #include <stdint.h>
-#include "../../util/stdio.h"
-#include "../../util/x86.h"
+#include <stdio.h>
+#include <x86.h>
 
 void main() {
     clearScr();

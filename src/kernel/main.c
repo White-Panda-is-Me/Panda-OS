@@ -1,8 +1,9 @@
 #include <stdint.h>
-#include "../util/stdio.h"
-#include "../util/x86.h"
+#include <stdio.h>
+#include <x86.h>
 
 void kmain() {
-    printf("Done!");
+    set_vid_mem((uint8_t*) (0xB8000 + 684));
+    printf("Done!\n");
     while(1);
 }
