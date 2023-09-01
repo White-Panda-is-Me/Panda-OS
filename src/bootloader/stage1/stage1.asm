@@ -1,18 +1,6 @@
 org 0x7c00
 bits 16
 
-jmp short entry
-
-
-;
-; mlfs entry :stage1
-;
-
-mlfs_entry:		db "stage1.bin"
-times 21 		db 0
-inode_num: 		dw 1
-
-
 %define endl 0x0D, 0x0A
 
 entry:

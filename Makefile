@@ -9,10 +9,10 @@ ASM=nasm
 disk: $(BUILD_DIR)/disk.img
 
 $(BUILD_DIR)/disk.img: bootloader kernel
-	$(FORMAT) ./build/disk.img
-	$(COPY) ./build/disk.img ./build/stage1.bin
-	$(COPY) ./build/disk.img ./build/stage2.bin
-	$(COPY) ./build/disk.img ./build/kernel.bin
+	$(FORMAT) ./build/disk.img 2800
+	$(COPY) ./build/disk.img ./build/stage1.bin /
+	$(COPY) ./build/disk.img ./build/stage2.bin /
+	$(COPY) ./build/disk.img ./build/kernel.bin /
 
 
 util: $(BUILD_DIR)/util
