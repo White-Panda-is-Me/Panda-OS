@@ -3,6 +3,7 @@
         "stdio.h": "c",
         "x86.h": "c",
         "*.obj": "c",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "mlfs.h": "c"
     }
 }

@@ -13,6 +13,7 @@ $(BUILD_DIR)/disk.img: bootloader kernel
 	$(COPY) ./build/disk.img ./build/stage1.bin /
 	$(COPY) ./build/disk.img ./build/stage2.bin /
 	$(COPY) ./build/disk.img ./build/kernel.bin /
+	$(COPY) ./build/disk.img ./test.txt /
 
 
 util: $(BUILD_DIR)/util
