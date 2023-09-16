@@ -38,9 +38,6 @@ Pmode:
     call main
     hlt
 
-    ; push ax
-    ; jmp 0x8:KERNEL_LOAD_OFFSET
-
 .halt:
     jmp .halt
 
@@ -117,15 +114,3 @@ EnableA20:
 A20AlreadyEnabled:
 	popa
     ret
-
-; disk_read_err:
-;     mov si, kernel_fuck
-;     call puts
-;     cli
-;     hlt
-
-drive_num:                   db 0
-msg1:                        db "Stage2 Loaded successfully!", 0
-; kernel_fuck:                 db "kernel read fucked up! shit", 0
-; KERNEL_LOAD_OFFSET: 		 equ 0x7E00
-; KERNEL_LOAD_SEGMENT:		 equ 0x0000

@@ -170,7 +170,7 @@ lba2chs:
 drive_num: 					db 0
 get_drive_param_err_msg:	db "Disk param fucked up", endl, 0
 disk_read_err_msg:			db "Disk read fucked up", endl, 0
-STAGE2_LOAD_OFFSET: 		equ 0x7E00
+STAGE2_LOAD_OFFSET: 		equ 0x0500
 STAGE2_LOAD_SEGMENT:		equ 0x0000
 
 stage2_block_start:			dd 0
