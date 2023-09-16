@@ -3,7 +3,7 @@ OUTPUT_FORMAT("binary")
 
 SECTIONS
 {
-    . = 0x500;
+    . = 0x7E00;
     .entry :
     {
         __entry_start = .;

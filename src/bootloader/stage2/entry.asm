@@ -1,49 +1,27 @@
 [bits 16]
 
 section .entry
+
 extern main
 global entry
 entry:
     [bits 16]
+    cli
     ; setting up segment ans stack registers
     xor ax, ax
     mov es, ax
     mov ds, ax
     mov ss, ax
-    mov sp, 0x500
-    sti
+    mov sp, 0x7C00
 
-    mov ax, 0x0007
-    int 10h
-
-    mov si, msg1
-    call puts
-    cli
-    hlt
-
-	; reading the KERNEL into memory
-	mov ah, 02h
-	mov al, 08h
-	mov ch, 00h
-	mov cl, 09h
-	mov dh, 00h
-	mov bx, KERNEL_LOAD_SEGMENT
-	mov es, bx
-	mov bx, KERNEL_LOAD_OFFSET
-	; load KERNEL.bin into address 0x1000 (es:bx)
-
-	int 13h
-    jc disk_read_err
-
-    cli
     call EnableA20
 
     ; now time to load the GDT
     lgdt [GDT_desc]
 
-    ; A20 grate is already enabled so set the controll flag as 1
+    ; set the controll flag as 1
     mov eax, cr0
-    or eax, 1
+    or al, 1
     mov cr0, eax
 
     jmp 08h:Pmode
@@ -58,8 +36,10 @@ Pmode:
     mov gs, ax
 
     call main
-    push ax
-    jmp 0x8:KERNEL_LOAD_OFFSET
+    hlt
+
+    ; push ax
+    ; jmp 0x8:KERNEL_LOAD_OFFSET
 
 .halt:
     jmp .halt
@@ -87,6 +67,7 @@ GDT:
 GDT_desc:
     dw GDT_desc - GDT - 1
     dd GDT
+
 ; puts function
 puts:
 	pusha
@@ -137,14 +118,14 @@ A20AlreadyEnabled:
 	popa
     ret
 
-disk_read_err:
-    mov si, kernel_fuck
-    call puts
-    cli
-    hlt
+; disk_read_err:
+;     mov si, kernel_fuck
+;     call puts
+;     cli
+;     hlt
 
 drive_num:                   db 0
 msg1:                        db "Stage2 Loaded successfully!", 0
-kernel_fuck:                 db "kernel read fucked up! shit", 0
-KERNEL_LOAD_OFFSET: 		 equ 0x7E00
-KERNEL_LOAD_SEGMENT:		 equ 0x0000
+; kernel_fuck:                 db "kernel read fucked up! shit", 0
+; KERNEL_LOAD_OFFSET: 		 equ 0x7E00
+; KERNEL_LOAD_SEGMENT:		 equ 0x0000

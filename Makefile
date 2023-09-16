@@ -1,7 +1,7 @@
 export BUILD_DIR=$(abspath build)
 SRC_DIR=src
-FORMAT=format
-COPY=copy
+FORMAT=$(HOME)/programming/C/mlfs2/build/format
+COPY=$(HOME)/programming/C/mlfs2/build/copy
 ASM=nasm
 
 .PHONY: run
@@ -9,11 +9,11 @@ ASM=nasm
 disk: $(BUILD_DIR)/disk.img
 
 $(BUILD_DIR)/disk.img: bootloader kernel
-	$(FORMAT) ./build/disk.img 20480
-	$(COPY) ./build/disk.img ./build/stage1.bin /
-	$(COPY) ./build/disk.img ./build/stage2.bin /
-	$(COPY) ./build/disk.img ./build/kernel.bin /
-	$(COPY) ./build/disk.img ./test.txt /
+	dd if=/dev/zero of=$(BUILD_DIR)/disk.img bs=1 count=1
+	$(FORMAT) $(BUILD_DIR)/disk.img $(BUILD_DIR)/stage1.bin 20480
+	$(COPY) $(BUILD_DIR)/disk.img $(BUILD_DIR)/stage2.bin
+	$(COPY) $(BUILD_DIR)/disk.img $(BUILD_DIR)/kernel.bin
+	$(COPY) $(BUILD_DIR)/disk.img ./test.txt
 
 
 util: $(BUILD_DIR)/util

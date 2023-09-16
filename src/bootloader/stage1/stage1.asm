@@ -10,7 +10,7 @@ mlfs_bps: 						dw 512			; bytes per sector
 mlfs_total_blocks: 				dw 20480
 mlfs_magic_word:				dd 0x4D4C4653	; magic word "MLFS"
 mlfs_max_root_dir_entries:		db 32
-mlfs_reserved_blocks:			db 1
+mlfs_reserved_blocks:			db 2
 mlfs_spt:						db 63			; sector per track
 mlfs_hpc:						db 16
 mlfs_cylinders:					dw 7
@@ -36,6 +36,24 @@ start:
 	hlt
 
 .continue:
+	; get the info about stage2
+	mov bx, 0
+	mov es, bx
+	mov bx, stage2_block_start
+	mov ax, 1			; second sector contains startBlock of each entry inside root directory
+	mov cl, 1
+	call disk_read
+
+	; now the LBA of stage2 is inside [stage2_block_start]
+	; the first block of stage2 metadata it is at the first sector of LBA
+	xor bx, bx
+	mov es, bx
+	mov bx, stage2_F_entry_info_block
+	mov ax, [stage2_block_start]
+	mov cl, 1							; information about each file is 512 bytes aka 1 sector
+	call disk_read
+
+.read_stage2:
 	; reading the stage2 into memory
 	push ax
 	push bx
@@ -44,8 +62,8 @@ start:
 	mov bx, STAGE2_LOAD_SEGMENT
 	mov es, bx
 	mov bx, STAGE2_LOAD_OFFSET
-	mov ax, 1
-	mov cl, 8
+	mov ax, [stage2_F_entry_info_block.BlockStart]
+	mov cl, [stage2_F_entry_info_block.FileSizeInSector]
 	call disk_read
 
 	pop cx
@@ -118,7 +136,6 @@ get_drive_param:
 disk_read:
 	push dx
 	push cx
-	; push di
 
 	call lba2chs
 	pop ax		; actually moving sector count from cx to ax
@@ -129,7 +146,6 @@ disk_read:
 	int 13h
 	jc .fucked_up
 
-	; pop di
 	pop dx
 	ret
 
@@ -154,8 +170,21 @@ lba2chs:
 drive_num: 					db 0
 get_drive_param_err_msg:	db "Disk param fucked up", endl, 0
 disk_read_err_msg:			db "Disk read fucked up", endl, 0
-STAGE2_LOAD_OFFSET: 		equ 0x0500
+STAGE2_LOAD_OFFSET: 		equ 0x7E00
 STAGE2_LOAD_SEGMENT:		equ 0x0000
+
+stage2_block_start:			dd 0
+stage2_F_entry_info_block:			; F stands for file
+	; Inode:
+		.inode_num:			dd 0
+		.flags:				db 0
+		.CreatedTime:		dw 0
+		.CreatedDate:		dw 0
+	; file:
+		.name:				times 120 db 0
+		.BlockStart:		dd 0
+		.FileSize:			dd 0
+		.FileSizeInSector:	dd 0
 
 times 510 - ($ - $$) db 0
 dw 0xAA55
