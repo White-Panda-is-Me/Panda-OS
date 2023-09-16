@@ -1,16 +1,15 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <x86.h>
-#include "cpu/cpu.h"
-
+#include "x86.h"
 void kmain(uint16_t ax) {
     // setting the video memory to put the things after bootloader
     set_vid_mem((uint8_t*) (0xB8000 + 684));
     printf("Done!\n");
 
-    int edx = edx_get_features();
-    if(edx & CPUID_FEAT_EDX_FPU)
-        printf("yeah!!!");
+    uint8_t buffer[512];
+    chs_ata_read(buffer);
+    printf("%x\n", buffer);
 
     while(1);
 }

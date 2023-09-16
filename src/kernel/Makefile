@@ -2,7 +2,7 @@
 SRC_DIR?=src
 ASM?=nasm
 CC=i686-elf-gcc
-CFILES=$(shell find *.c) $(shell find cpu/*.c)
+CFILES=$(shell find *.c) $(shell find cpu/*.c)# $(shell find drivers/disk/*.c)
 ASMFILES=$(shell find *.asm)
 COBJFILES=$(patsubst %.c, $(BUILD_DIR)/kernel/c/%.obj, $(CFILES)) $(shell find -f ../../build/stage2/c/*.obj) $(shell find -f ../../build/stage2/asm/*.obj)
 ASMOBJFILES=$(patsubst %.asm, $(BUILD_DIR)/kernel/asm/%.obj, $(ASMFILES))

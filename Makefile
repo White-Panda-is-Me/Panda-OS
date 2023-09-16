@@ -9,7 +9,7 @@ ASM=nasm
 disk: $(BUILD_DIR)/disk.img
 
 $(BUILD_DIR)/disk.img: bootloader kernel
-	$(FORMAT) ./build/disk.img 2800
+	$(FORMAT) ./build/disk.img 20480
 	$(COPY) ./build/disk.img ./build/stage1.bin /
 	$(COPY) ./build/disk.img ./build/stage2.bin /
 	$(COPY) ./build/disk.img ./build/kernel.bin /
@@ -61,7 +61,7 @@ $(BUILD_DIR)/kernel.bin: $(SRC_DIR)/kernel/kernel.asm
 # # # # # # # # # #
 
 run:
-	qemu-system-x86_64 -fda $(BUILD_DIR)/disk.img
+	qemu-system-x86_64 -hda $(BUILD_DIR)/disk.img
 
 
 # # # # # # # # # #

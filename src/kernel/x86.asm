@@ -16,17 +16,19 @@
 global chs_ata_read
 chs_ata_read:
     [bits 32]
+
     pushfd
-    push eax
+
     push ebx
     push ecx
     push edx
-    push edi
 
-    mov ebx, [esp + 4]      ; full ebx: cylinder, head, sector
-    mov ch,  [esp + 12]     ; sector count
-    xor edi, edi
-    mov edi, [esp + 14]     ; address to load the buffer into memory
+
+    mov ch,  0x01            ; sector count
+    xor ebx, ebx
+    mov ebx, [esp + 4]       ; address to load the buffer into memory
+    mov edi, ebx
+    mov ebx, 0x0A000608      ; full ebx: (2 bytes)cylinder, (1 byte)head, (1byte)sector
 
     mov edx,1f6h            ;port to send drive & head numbers
     mov al,bh               ;head index in BH
@@ -61,20 +63,20 @@ chs_ata_read:
 .still_going:
     in al,dx
     test al,8               ;the sector buffer requires servicing.
-    jz .still_going         ;until the sector buffer is ready.
+    jnz .still_going         ;until the sector buffer is ready.
 
-    mov eax,512/2           ;to read 256 words = 1 sector
+    mov eax,512             ;to read 256 words = 1 sector
     xor bx,bx
     mov bl,ch               ;read CH sectors
     mul bx
     mov ecx,eax             ;ECX is counter for INSW
     mov edx,1f0h            ;Data port, in and out
-    rep insw                ;in to [EDI]
+    rep insb                ;in to [EDI]
+    mov [eax], edi
 
-    pop edi
     pop edx
     pop ecx
     pop ebx
-    pop eax
     popfd
+
     ret
