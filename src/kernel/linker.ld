@@ -6,7 +6,6 @@ SECTIONS
     . = 0x7E00;
     .entry :
     {
-        __entry_start = .;
         *(.entry)
     }
     .text :

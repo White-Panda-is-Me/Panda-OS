@@ -36,7 +36,6 @@ Pmode:
     mov gs, ax
 
     call main
-    hlt
 
 .halt:
     jmp .halt

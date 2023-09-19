@@ -15,12 +15,6 @@ $(BUILD_DIR)/disk.img: bootloader kernel
 	$(COPY) $(BUILD_DIR)/disk.img $(BUILD_DIR)/kernel.bin
 	$(COPY) $(BUILD_DIR)/disk.img ./test.txt
 
-
-util: $(BUILD_DIR)/util
-
-$(BUILD_DIR)/util/c/%.obj $(BUILD_DIR)/util/asm/%.obj: $(SRC_DIR)/util
-	$(MAKE) -C src/util
-
 # # # # # # # # # #
 #                 #
 #    bootloader   #
@@ -38,7 +32,6 @@ $(BUILD_DIR)/stage1.bin: $(SRC_DIR)/bootloader/stage1/stage1.asm
 stage2: $(BUILD_DIR)/stage2.bin
 
 $(BUILD_DIR)/stage2.bin: $(SRC_DIR)/bootloader/stage2
-	$(MAKE) -C $(SRC_DIR)/util
 	$(MAKE) -C $(SRC_DIR)/bootloader/stage2
 
 
@@ -50,7 +43,7 @@ $(BUILD_DIR)/stage2.bin: $(SRC_DIR)/bootloader/stage2
 
 kernel: $(BUILD_DIR)/kernel.bin
 
-$(BUILD_DIR)/kernel.bin: $(SRC_DIR)/kernel/kernel.asm
+$(BUILD_DIR)/kernel.bin: $(SRC_DIR)/kernel/main.c
 	$(MAKE) -C $(SRC_DIR)/kernel
 
 

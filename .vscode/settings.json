@@ -4,6 +4,8 @@
         "x86.h": "c",
         "*.obj": "c",
         "stdbool.h": "c",
-        "mlfs.h": "c"
+        "mlfs.h": "c",
+        "ata.h": "c",
+        "memory.h": "c"
     }
 }

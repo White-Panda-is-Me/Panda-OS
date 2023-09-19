@@ -1,6 +1,13 @@
 #include <stdint.h>
-#include <stdio.h>
-#include <x86.h>
+#include "memory.h"
+#include "x86.h"
+#include "ata.h"
+#include "mlfs.h"
+#include "stdio.h"
+
+uint8_t* KernelLoadBuffer = (uint8_t*) 0x2000;
+uint8_t* KernelAddress = (uint8_t*) 0x7E00;
+typedef void (*Kernel)();
 
 void main() {
     clearScr();
@@ -8,5 +15,17 @@ void main() {
     printf("stage2 Loaded Successfully!\n");
     printf("Switching to 32 bit Pmode...\tDone!\n");
     printf("Switching language to C...\tDone!\n");
-    printf("Loading Kernel...\t");
+    MLFS_init();
+    Entry entry;
+    uint8_t* KenrelLoad = KernelAddress;
+    OpenFile(&entry, "/kernel.bin");
+    ReadFile(&entry, KernelLoadBuffer);
+    memcpy(KenrelLoad, KernelLoadBuffer, entry.Info.file.fileSize);
+    CloseFile(&entry);
+    Kernel Kmain = (Kernel) KernelAddress;
+    // Kmain -= 588;
+    Kmain();
+    printf("couldn't fucking execute kernel!\n");
+    printf("KernelAddress: %p\n", Kmain);
+    print_buffer("", KernelLoadBuffer, 128);
 }

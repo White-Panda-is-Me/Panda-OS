@@ -11,9 +11,9 @@ mlfs_total_blocks: 				dw 20480
 mlfs_magic_word:				dd 0x4D4C4653	; magic word "MLFS"
 mlfs_max_root_dir_entries:		db 32
 mlfs_reserved_blocks:			db 2
-mlfs_spt:						db 63			; sector per track
-mlfs_hpc:						db 16
-mlfs_cylinders:					dw 7
+mlfs_spt:						db 0 			; sector per track
+mlfs_hpc:						db 0
+mlfs_cylinders:					dw 0
 
 start:
 	; setting up stack and segment registers
@@ -155,6 +155,7 @@ disk_read:
 
 	cli
 	hlt
+
 lba2chs:
 	xor dx, dx
 	div word [mlfs_spt]
@@ -186,5 +187,16 @@ stage2_F_entry_info_block:			; F stands for file
 		.FileSize:			dd 0
 		.FileSizeInSector:	dd 0
 
+; Extended Read Drive Parameters
+	; .size: 					dw 1Eh
+	; .flags:					dw 0
+	; .cylinders:				dd 0
+	; .heads:					dd 0
+	; .spt:					dd 0
+	; .totalsector:			dq 0
+	; .bps:					dw 0
+	; .edd:					dd 0
+
 times 510 - ($ - $$) db 0
 dw 0xAA55
+extended_drive_params:
