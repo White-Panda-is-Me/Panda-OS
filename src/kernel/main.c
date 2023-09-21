@@ -1,8 +1,10 @@
 #include <stdint.h>
-#include "stdio.h"
+#include "../common/stdio.h"
+#include "../common/x86.h"
 
-void __attribute__((section(".entry"))) kmain() {
-    printf("Kernel loaded successfully!\n");
+void kmain() {
+    clearScr();
+    // printf("hello from kernel!\n");
 
     while(1);
 }

@@ -60,6 +60,22 @@ GDT:
     db 11001111b
     db 0
 
+    ; 16-bit code segment
+    dw 0FFFFh
+    dw 0
+    db 0
+    db 10011010b
+    db 00001111b
+    db 0
+
+    ; 16-bit data segment
+    dw 0FFFFh
+    dw 0
+    db 0
+    db 10010010b
+    db 00001111b
+    db 0
+
 GDT_desc:
     dw GDT_desc - GDT - 1
     dd GDT

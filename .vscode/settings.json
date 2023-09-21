@@ -6,6 +6,8 @@
         "stdbool.h": "c",
         "mlfs.h": "c",
         "ata.h": "c",
-        "memory.h": "c"
-    }
+        "memory.h": "c",
+        "memdetect.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }

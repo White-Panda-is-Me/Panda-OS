@@ -1,13 +1,11 @@
 #include <stdint.h>
-#include "memory.h"
-#include "x86.h"
-#include "ata.h"
-#include "mlfs.h"
-#include "stdio.h"
+#include <mlfs.h>
+#include <stdio.h>
+#include "memdetect.h"
 
-uint8_t* KernelLoadBuffer = (uint8_t*) 0x2000;
-uint8_t* KernelAddress = (uint8_t*) 0x7E00;
+uint8_t* KernelLoadAddr = (uint8_t*) 0x100000;
 typedef void (*Kernel)();
+// MemoryInfo mem_info;
 
 void main() {
     clearScr();
@@ -15,17 +13,16 @@ void main() {
     printf("stage2 Loaded Successfully!\n");
     printf("Switching to 32 bit Pmode...\tDone!\n");
     printf("Switching language to C...\tDone!\n");
+
+    // uint16_t memRegionCount = GetMemoryMap(&mem_info);
+
     MLFS_init();
-    Entry entry;
-    uint8_t* KenrelLoad = KernelAddress;
-    OpenFile(&entry, "/kernel.bin");
-    ReadFile(&entry, KernelLoadBuffer);
-    memcpy(KenrelLoad, KernelLoadBuffer, entry.Info.file.fileSize);
-    CloseFile(&entry);
-    Kernel Kmain = (Kernel) KernelAddress;
-    // Kmain -= 588;
+    Entry* entry = OpenFile("/kernel.bin");
+    ReadFile(entry, KernelLoadAddr);
+    Kernel Kmain = (Kernel) KernelLoadAddr;
+    CloseFile(entry);
+    printf("KernelBase: %p\n", Kmain);
+    printf("KernelLength: %u\n", entry->Info.file.fileSize);
     Kmain();
-    printf("couldn't fucking execute kernel!\n");
-    printf("KernelAddress: %p\n", Kmain);
-    print_buffer("", KernelLoadBuffer, 128);
+    while(1);
 }

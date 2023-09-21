@@ -22,14 +22,14 @@ start:
 	mov ds, ax
 	mov es, ax
 	mov ss, ax
-	mov sp, 0x7C00
+	mov esp, 0x7c00
 	sti
 
 	mov [drive_num], dl
 
 	call get_drive_param
 
-	cmp dl, 0x80			; I hate mother fucking floppy disks, so i don't support this piece of shit
+	cmp dl, 0x80			; I hate fucking floppy disks, so i don't support this piece of shit
 	jae .continue
 
 	cli
@@ -39,40 +39,95 @@ start:
 	; get the info about stage2
 	mov bx, 0
 	mov es, bx
-	mov bx, stage2_block_start
+	mov bx, file_block_start
 	mov ax, 1			; second sector contains startBlock of each entry inside root directory
 	mov cl, 1
 	call disk_read
 
-	; now the LBA of stage2 is inside [stage2_block_start]
-	; the first block of stage2 metadata it is at the first sector of LBA
+	; now we read stage2 into memory
+	mov si, stage2_name
+	mov di, STAGE2_LOAD_SEGMENT
+	mov es, di
+	mov di, STAGE2_LOAD_OFFSET
+	mov cx, 10
+	call load_file
+
+	; it's time for common files
+	; mov si, common_name
+	; mov di, COMMON_LOAD_SEGMENT
+	; mov es, di
+	; mov di, COMMON_LOAD_OFFSET
+	; mov cx, 10
+	; call load_file
+	jmp STAGE2_LOAD_SEGMENT:STAGE2_LOAD_OFFSET
+
+
+; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ;
+;   @param DS:SI = name of the file				;
+;   @param CX = size of the file name			;
+;	@param ES:DI = address to load the file		;
+;												;
+;	@return none							    ;
+; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ;
+load_file:
+	push di
+	push dx
+	xor dx, dx
+
+.search_file:
+	push si
+	push cx
+	push es
+	mov ax, [bx]
 	xor bx, bx
 	mov es, bx
-	mov bx, stage2_F_entry_info_block
-	mov ax, [stage2_block_start]
-	mov cl, 1							; information about each file is 512 bytes aka 1 sector
+	mov bx, file_entry_info_block
+	mov cl, 1
 	call disk_read
-
-.read_stage2:
-	; reading the stage2 into memory
-	push ax
-	push bx
-	push cx
-
-	mov bx, STAGE2_LOAD_SEGMENT
-	mov es, bx
-	mov bx, STAGE2_LOAD_OFFSET
-	mov ax, [stage2_F_entry_info_block.BlockStart]
-	mov cl, [stage2_F_entry_info_block.FileSizeInSector]
-	call disk_read
-
+	pop es
 	pop cx
-	pop bx
-	pop ax
-	; load stage2.bin into address 0x0000:0500 (es:bx)
+	pop si
 
-	;now jump to the stage2 address into the memory
-	jmp STAGE2_LOAD_SEGMENT:STAGE2_LOAD_OFFSET
+	mov di, file_entry_info_block.name
+	call puts
+	mov si, di
+	call puts
+	repe cmpsb
+	; push si
+	; mov si, di
+	; call puts
+	; pop si
+
+	jz .found_file
+
+.next_block:
+	add bx, 4
+	add dx, 4
+	cmp dx, 512
+	jae .file_not_found
+
+	jmp .search_file
+
+.found_file:
+	mov dx, ds
+	mov es, dx
+	pop dx
+	pop di
+
+	mov bx, di
+	mov ax, [file_entry_info_block.BlockStart]
+	mov cl, [file_entry_info_block.FileSizeInSector]
+	call disk_read
+
+	ret
+
+.file_not_found:
+	pop dx
+	pop di
+	; the file name is already inside si
+	call puts
+	mov si, file_not_found_msg
+	call puts
 
 	cli
 	hlt
@@ -131,7 +186,9 @@ get_drive_param:
 ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ;
 ;   @param AX = LBA value to load into mem		;
 ;   @param ES:BX = address to load the file		;
-;   @param CL = sector count to read		    ;
+;   @param CL = sector count to read			;
+;												;	
+;	@return none							    ;
 ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ; ;
 disk_read:
 	push dx
@@ -169,13 +226,17 @@ lba2chs:
 	ret
 
 drive_num: 					db 0
-get_drive_param_err_msg:	db "Disk param fucked up", endl, 0
-disk_read_err_msg:			db "Disk read fucked up", endl, 0
+get_drive_param_err_msg:	db "Disk param failed", endl, 0
+disk_read_err_msg:			db "Disk read failed", endl, 0
+file_not_found_msg:			db " not found!", endl, 0
 STAGE2_LOAD_OFFSET: 		equ 0x0500
 STAGE2_LOAD_SEGMENT:		equ 0x0000
 
-stage2_block_start:			dd 0
-stage2_F_entry_info_block:			; F stands for file
+COMMON_LOAD_OFFSET:			equ 0x7E00
+COMMON_LOAD_SEGMENT: 		equ 0x0000
+stage2_name:				db 'stage2.bin', 0
+
+file_entry_info_block:			; F stands for file
 	; Inode:
 		.inode_num:			dd 0
 		.flags:				db 0
@@ -187,16 +248,7 @@ stage2_F_entry_info_block:			; F stands for file
 		.FileSize:			dd 0
 		.FileSizeInSector:	dd 0
 
-; Extended Read Drive Parameters
-	; .size: 					dw 1Eh
-	; .flags:					dw 0
-	; .cylinders:				dd 0
-	; .heads:					dd 0
-	; .spt:					dd 0
-	; .totalsector:			dq 0
-	; .bps:					dw 0
-	; .edd:					dd 0
-
 times 510 - ($ - $$) db 0
 dw 0xAA55
-extended_drive_params:
+
+file_block_start:
