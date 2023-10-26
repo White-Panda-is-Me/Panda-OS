@@ -12,7 +12,7 @@ entry:
     mov es, ax
     mov ds, ax
     mov ss, ax
-    mov sp, 0x7C00
+    mov esp, stack_top
 
     call EnableA20
 
@@ -129,3 +129,8 @@ EnableA20:
 A20AlreadyEnabled:
 	popa
     ret
+
+section .bss
+stack_bottom:
+    resb 0x10000
+stack_top:

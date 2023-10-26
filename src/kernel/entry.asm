@@ -5,22 +5,14 @@ extern kmain
 
 global kentry
 kentry:
-    [bits 32]
-    ; xor eax, eax
-    ; mov ax, 0x10
-    ; mov ss, ax
-    ; mov es, ax
-    ; mov ds ,ax
-
-    mov esp, 0x100000
-
-    ; mov edi, 0xB8000
-    ; mov byte [edi], 'A'
+    mov esp, stack_top
+    mov ebp, stack_top
     call kmain
-    ; call kmain
 
-    hlt
+.halt:
+    jmp .halt
 
-; section .bss
-; stack_top:
-    ; resb 0x10000        ;stack size
+section .bss
+stack_bottom:
+    resb 0x10000        ;stack size
+stack_top:

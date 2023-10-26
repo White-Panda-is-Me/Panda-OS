@@ -89,14 +89,7 @@ load_file:
 	pop si
 
 	mov di, file_entry_info_block.name
-	call puts
-	mov si, di
-	call puts
 	repe cmpsb
-	; push si
-	; mov si, di
-	; call puts
-	; pop si
 
 	jz .found_file
 
@@ -172,7 +165,7 @@ get_drive_param:
 	mov [mlfs_spt], bl				; sector per track
 
 	inc dh
-	mov [mlfs_hpc], dh			; heads per cylinder
+	mov [mlfs_hpc], dh				; heads per cylinder
 
 	popa
 	ret
@@ -232,8 +225,6 @@ file_not_found_msg:			db " not found!", endl, 0
 STAGE2_LOAD_OFFSET: 		equ 0x0500
 STAGE2_LOAD_SEGMENT:		equ 0x0000
 
-COMMON_LOAD_OFFSET:			equ 0x7E00
-COMMON_LOAD_SEGMENT: 		equ 0x0000
 stage2_name:				db 'stage2.bin', 0
 
 file_entry_info_block:			; F stands for file

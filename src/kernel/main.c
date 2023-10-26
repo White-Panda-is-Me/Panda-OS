@@ -1,10 +1,10 @@
-#include <stdint.h>
-#include "../common/stdio.h"
-#include "../common/x86.h"
+#include <something.h>
+#include <stdio.h>
 
 void kmain() {
-    clearScr();
     // printf("hello from kernel!\n");
+    smth();
+    clearScr();
 
     while(1);
 }

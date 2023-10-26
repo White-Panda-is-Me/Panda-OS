@@ -1,25 +1,16 @@
 ENTRY(entry)
 OUTPUT_FORMAT("binary")
+phys = 0x500;
 
 SECTIONS
 {
-    . = 0x500;
-    .entry :
-    {
-        __entry_start = .;
-        *(.entry)
-    }
-    .text :
-    {
-        *(.text)
-        *(.rodata)
-    }
-    .data :
-    {
-        *(.data)
-    }
-    .bss :
-    {
-        *(.bss)
-    }
+    . = phys;
+
+    .entry              : { __entry_start = .;      *(.entry)   }
+    .text               : { __text_start = .;       *(.text)    }
+    .data               : { __data_start = .;       *(.data)    }
+    .rodata             : { __rodata_start = .;     *(.rodata)  }
+    .bss                : { __bss_start = .;        *(.bss)     }
+    
+    __end = .;
 }

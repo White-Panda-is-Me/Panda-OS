@@ -16,7 +16,7 @@ all: stage2
 
 stage2: $(BUILD_DIR)/stage2.bin
 
-$(BUILD_DIR)/stage2.bin: $(ASMOBJFILES) $(COMMONASMOBJFILES) $(COBJFILES) $(COMMONCOBJFILES)
+$(BUILD_DIR)/stage2.bin: $(ASMOBJFILES) $(COBJFILES)
 	$(CC) $(LDFLAGS) -Wl,--oformat=binary -Wl,-Map=$(BUILD_DIR)/stage2.map -o $@ $^ -lgcc
 
 $(BUILD_DIR)/stage2/c/%.obj: %.c

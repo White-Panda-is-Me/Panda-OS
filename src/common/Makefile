@@ -6,7 +6,7 @@ CFILES=$(shell find *.c)# $(shell find cpu/*.c) $(shell find drivers/disk/*.c)
 ASMFILES=$(shell find *.asm)
 COBJFILES=$(patsubst %.c, $(BUILD_DIR)/common/c/%.obj, $(CFILES))
 ASMOBJFILES=$(patsubst %.asm, $(BUILD_DIR)/common/asm/%.obj, $(ASMFILES))
-CFLAGS=-std=c99 -g -ffreestanding -nostdlib -Wall -Werror -I. -I$(SRC_DIR)/common
+CFLAGS=-std=c99 -g -ffreestanding -nostdlib -Wall -Werror -I.
 LDFLAGS=-T linker.ld -nostdlib
 
 .PHONY: all common clean always

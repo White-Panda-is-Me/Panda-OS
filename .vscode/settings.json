@@ -7,7 +7,9 @@
         "mlfs.h": "c",
         "ata.h": "c",
         "memory.h": "c",
-        "memdetect.h": "c"
-    },
-    "C_Cpp.errorSquiggles": "disabled"
+        "memdetect.h": "c",
+        "string.h": "c",
+        "stdio1.h": "c",
+        "stdarg.h": "c"
+    }
 }
