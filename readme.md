@@ -1,6 +1,6 @@
 # Panda OS (aka Mammad_OS)
 
-**A simple operating system which runs on BIOS-base systems.**
+**A simple x86 operating system which runs on BIOS-base systems.**
 
 ## MLFS+
 This is my own very simple file system which is used in this OS. Believe it or not but It's really ***better*** than FAT or EXT.
@@ -11,6 +11,7 @@ This is my own very simple file system which is used in this OS. Believe it or n
 - [x] ATA Driver
 - [x] Memory map
 - [ ] Long mode
-- [ ] Memory management
 - [ ] Paging
+- [ ] Memory management
+- [ ] Memory allocator
 - [ ] IDT & GDT

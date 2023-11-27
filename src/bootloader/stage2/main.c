@@ -1,7 +1,5 @@
 #include <stdint.h>
-#include <mlfs.h>
 #include <stdio.h>
-#include <memory.h>
 #include <mlfs.h>
 #include <memdetect.h>
 #include <bootparams.h>
