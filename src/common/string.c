@@ -29,6 +29,15 @@ int strcmp(char* str1, char* str2) {
     return 0;
 }
 
+void strcpy(char* str1, char* str2) {
+    while (*str2) {
+        *str1 = *str2;
+        str1++;
+        str2++;
+    }
+    
+}
+
 char outStr[124];
 char* substr(char* str, int i1, int i2) {
     for (int i = 0;i < 124;i++) {

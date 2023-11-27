@@ -1,14 +1,9 @@
 #include "stdio.h"
 #include "x86.h"
 
-uint8_t* vid_mem = (uint8_t*) 0xB8000;
 #define SCREEN_WIDTH 80
 #define SCREEN_HEIGHT 25
-#define DEFAULT_COLOR 0x89
-
-void set_vid_mem(uint8_t* mem) {
-    vid_mem = mem;
-}
+#define DEFAULT_COLOR 0x70
 
 // // // // // // // // // //
 //                         //
@@ -40,29 +35,28 @@ void setCurPos(uint8_t x, uint8_t y) {
 //                         //
 // // // // // // // // // //
 
-void cursor2VGA(uint8_t x, uint8_t y) {
-    vid_mem = (uint8_t*) 0xB8000;
-    vid_mem += ((x + y * 80)* 2);
+uint8_t* cursor2VGA(uint8_t x, uint8_t y) {
+    return (uint8_t*) (0xB8000 + ((x + y * 80)* 2));
 }
 
 void clearScr() {
-    char clear = ' ';
+    uint8_t* vid = (uint8_t*) 0xb8000;
 
-    for (int i = 0; i < (80 * 50);i++) {
-        *vid_mem = clear;
-        vid_mem++;
-        *vid_mem = DEFAULT_COLOR;
-        vid_mem++;
+    for (int i = 0; i < (80 * 25);i++) {
+        *vid = ' ';
+        vid++;
+        *vid = DEFAULT_COLOR;
+        vid++;
     }
 
     setCurPos(0, 0);
-    vid_mem = (uint8_t*) 0xB8000;
 }
 
 void putc(const char chr) {
     uint16_t pos = getCurPos();
     uint8_t x = pos % SCREEN_WIDTH;
     uint8_t y = (pos - x) / SCREEN_WIDTH;
+    uint8_t* vid_mem = cursor2VGA(x, y);
 
     switch (chr) {
         case '\n':

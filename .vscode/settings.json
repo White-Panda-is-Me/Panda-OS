@@ -10,6 +10,8 @@
         "memdetect.h": "c",
         "string.h": "c",
         "stdio1.h": "c",
-        "stdarg.h": "c"
+        "stdarg.h": "c",
+        "something.h": "c",
+        "device.h": "c"
     }
 }

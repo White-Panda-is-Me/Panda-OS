@@ -132,5 +132,5 @@ A20AlreadyEnabled:
 
 section .bss
 stack_bottom:
-    resb 0x10000
+    resb 0x500
 stack_top:

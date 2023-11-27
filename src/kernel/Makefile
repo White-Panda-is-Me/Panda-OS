@@ -15,7 +15,7 @@ all: kernel
 
 kernel: $(BUILD_DIR)/kernel.bin
 
-$(BUILD_DIR)/kernel.bin: $(ASMOBJFILES) $(COBJFILES)
+$(BUILD_DIR)/kernel.bin: $(ASMOBJFILES) $(COBJFILES) $(COMMONCOBJFILES) $(COMMONASMOBJFILES)
 	$(CC) $(LDFLAGS) -Wl,--oformat=binary -Wl,-Map=$(BUILD_DIR)/kernel.map -o $@ $^ -lgcc
 
 $(BUILD_DIR)/kernel/c/%.obj: %.c

@@ -1,4 +1,4 @@
-ENTRY(entry)
+ENTRY(kmain)
 OUTPUT_FORMAT("binary")
 phys = 0x200000;
 

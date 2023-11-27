@@ -2,7 +2,7 @@
 #include "stdbool.h"
 #include "ata.h"
 #include <stdint.h>
-
+#include <device.h>
 #define PACKED                     __attribute__((packed))
 
 #define BLOCK_SIZE                 512
@@ -71,7 +71,7 @@ typedef struct {
 } PACKED Entry;
 
 char* Path2Name(char* dir);
-void MLFS_init();
-Entry* OpenFile(char* dirStr);
-void ReadFile(Entry* entry, void* buffer);
+void MLFS_init(device* dev);
+Entry* OpenFile(char* dirStr, device* dev);
+void ReadFile(Entry* entry, void* buffer, device* dev);
 void CloseFile(Entry* entry);

@@ -52,13 +52,6 @@ start:
 	mov cx, 10
 	call load_file
 
-	; it's time for common files
-	; mov si, common_name
-	; mov di, COMMON_LOAD_SEGMENT
-	; mov es, di
-	; mov di, COMMON_LOAD_OFFSET
-	; mov cx, 10
-	; call load_file
 	jmp STAGE2_LOAD_SEGMENT:STAGE2_LOAD_OFFSET
 
 

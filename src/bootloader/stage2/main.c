@@ -1,30 +1,28 @@
 #include <stdint.h>
 #include <mlfs.h>
 #include <stdio.h>
+#include <memory.h>
+#include <mlfs.h>
+#include <memdetect.h>
+#include <bootparams.h>
 
 uint8_t* KernelLoadAddr = (uint8_t*) 0x200000;
-typedef void (*Kernel)();
-// static MemoryInfo mem_info;
+typedef void (*Kernel)(BootParams* boot_params);
+BootParams boot_params;
+MemoryInfo g_mem_info;
+device g_dev;
 
 void main() {
     clearScr();
-    printf("Welcome to Panda OS!\n");
-    printf("stage2 Loaded Successfully!\n");
-    printf("Switching to 32 bit Pmode...\tDone!\n");
-    printf("Switching language to C...\tDone!\n");
+    uint16_t memRegionCount = GetMemoryMap(&g_mem_info);
 
-    // uint16_t memRegionCount = GetMemoryMap(&mem_info);
-    // printf("Base\tLength\tType\tACPI\n");
-    // for (int i = 0;i < memRegionCount;i++) {
-    //     printf("%llp\t%llp\t%p\t%p\n", mem_info.map[i].Base, mem_info.map[i].Length, mem_info.map[i].Type, mem_info.map[i].ACPI);
-    // }
-
-    MLFS_init();
-    Entry* entry = OpenFile("/kernel.bin");
-    ReadFile(entry, KernelLoadAddr);
+    MLFS_init(&g_dev);
+    Entry* entry = OpenFile("/kernel.bin", &g_dev);
     Kernel Kmain = (Kernel) KernelLoadAddr;
+    ReadFile(entry, KernelLoadAddr, &g_dev);
     CloseFile(entry);
-    // printf("KernelBase: %p\n", Kmain);
-    // printf("KernelLength: %u\n", entry->Info.file.fileSize);
-    Kmain();
+
+    boot_params.dev = &g_dev;
+    boot_params.mem_info = &g_mem_info;
+    Kmain(&boot_params);
 }

@@ -13,8 +13,39 @@ x86_inb:
     [bits 32]
 
     mov dx, [esp + 4]
-    xor eax, eax
     in al, dx
+
+    ret
+
+global x86_inw
+x86_inw:
+    [bits 32]
+
+    mov dx, [esp + 4]
+    in ax, dx
+
+    ret
+
+global x86_insw
+x86_insw:
+    push ebp
+    mov ebp, esp
+
+    push edi
+    push ecx
+    push edx
+
+    mov edi, [ebp + 8]
+    mov ecx, [ebp + 12]
+    mov edx, [ebp + 16]
+    insw
+
+    pop edx
+    pop ecx
+    pop edi
+
+    mov esp, ebp
+    pop ebp
 
     ret
 
@@ -106,8 +137,6 @@ MemDetect:
     mov edx, 0x534D4150             ; edx is fucked up and has to be set again
     cmp edx, eax                    ; if eax isn't equal to edx then 
     jne .error                      ; it means it is fucked up somehow
-    ;cmp ebx, 0                      ; if ebx is zero then
-    ;je .error                       ; it means it is fucked up somehow
 
     mov ds:[si], ebx
 
