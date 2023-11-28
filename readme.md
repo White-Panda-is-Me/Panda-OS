@@ -10,8 +10,9 @@ This is my own very simple file system which is used in this OS. Believe it or n
 - [x] File System
 - [x] ATA Driver
 - [x] Memory map
-- [ ] Long mode
+- [x] IDT & GDT
+- [ ] ISR & IRQ
 - [ ] Paging
 - [ ] Memory management
 - [ ] Memory allocator
-- [ ] IDT & GDT
+- [ ] Long mode
