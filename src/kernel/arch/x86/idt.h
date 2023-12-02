@@ -28,7 +28,7 @@ typedef struct {
 
 void __attribute__((cdecl)) x86_IDT_Load(IDTDescriptor* IDT_Desc);
 
-void i686_IDT_SetGate(int interrupt, void* base, uint16_t segmentDescriptor, uint8_t attr);
-void i686_IDT_EnableGate(int interrupt);
-void i686_IDT_DisableGate(int interrupt);
+void x86_IDT_SetGate(int interrupt, void* base, uint16_t segmentDescriptor, uint8_t attr);
+void x86_IDT_EnableGate(int interrupt);
+void x86_IDT_DisableGate(int interrupt);
 void IDT_Init();

@@ -163,3 +163,8 @@ MemDetect:
 
     clc
     ret
+
+global panic
+panic:
+    cli
+    hlt
