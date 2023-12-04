@@ -1,7 +1,7 @@
 ASM?=nasm
 CC=i686-elf-gcc
-CFILES=$(wildcard *.c) $(wildcard */*/*.c) $(wildcard */*/*/*.c)
-ASMFILES=$(wildcard *.asm) $(wildcard arch/x86/*.asm)
+CFILES=$(wildcard *.c) $(wildcard */*.c) $(wildcard */*/*.c) $(wildcard */*/*/*.c)
+ASMFILES=$(wildcard *.asm) $(wildcard */*.asm) $(wildcard */*/*.asm) $(wildcard */*/*/*.asm)
 COBJFILES=$(patsubst %.c, $(BUILD_DIR)/kernel/c/%.obj, $(CFILES))
 ASMOBJFILES=$(patsubst %.asm, $(BUILD_DIR)/kernel/asm/%.obj, $(ASMFILES))
 COMMONCOBJFILES=$(shell find $(BUILD_DIR)/common/c/*.obj)
