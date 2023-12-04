@@ -11,7 +11,7 @@ This is my own very simple file system which is used in this OS. Believe it or n
 - [x] ATA Driver
 - [x] Memory map
 - [x] IDT & GDT
-- [ ] Interrupt Handling
+- [x] ISR & IRQ
 - [ ] Paging
 - [ ] Memory management
 - [ ] Memory allocator

@@ -10,7 +10,9 @@
         "memdetect.h": "c",
         "string.h": "c",
         "stdarg.h": "c",
-        "device.h": "c"
+        "device.h": "c",
+        "irq.h": "c",
+        "handlers.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

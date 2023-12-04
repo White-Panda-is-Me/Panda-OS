@@ -1,12 +1,13 @@
 ASM?=nasm
 CC=i686-elf-gcc
-CFILES=$(wildcard *.c) $(wildcard arch/x86/*.c)
+CFILES=$(wildcard *.c) $(wildcard */*/*.c) $(wildcard */*/*/*.c)
 ASMFILES=$(wildcard *.asm) $(wildcard arch/x86/*.asm)
 COBJFILES=$(patsubst %.c, $(BUILD_DIR)/kernel/c/%.obj, $(CFILES))
 ASMOBJFILES=$(patsubst %.asm, $(BUILD_DIR)/kernel/asm/%.obj, $(ASMFILES))
 COMMONCOBJFILES=$(shell find $(BUILD_DIR)/common/c/*.obj)
 COMMONASMOBJFILES=$(shell find $(BUILD_DIR)/common/asm/*.obj)
-CFLAGS=-std=c99 -g -ffreestanding -nostdlib -Wall -Werror -Wextra -Wno-unused-variable -I. -I../common
+CFLAGS=-std=c99 -g -ffreestanding -nostdlib -Wall -Werror -Wextra -Wno-unused-variable \
+	   -Wno-error=unused-parameter -I. -I../common
 LDFLAGS=-T linker.ld -nostdlib
 
 .PHONY: all kernel clean always
