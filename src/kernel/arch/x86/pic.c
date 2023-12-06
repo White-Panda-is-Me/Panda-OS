@@ -1,7 +1,7 @@
 #include "pic.h"
 #include "idt.h"
 #include "isr.h"
-#include <x86.h>
+#include <io.h>
 #include <stdio.h>
 
 // PIC ports

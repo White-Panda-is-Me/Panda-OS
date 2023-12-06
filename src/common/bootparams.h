@@ -1,5 +1,5 @@
 #include <memdetect.h>
-#include <device.h>
+#include <disk/device.h>
 
 typedef struct {
     MemoryInfo* mem_info;

@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
-#include <mlfs.h>
+#include <fs/mlfs.h>
 #include <memdetect.h>
 #include <bootparams.h>
 

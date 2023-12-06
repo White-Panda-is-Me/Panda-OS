@@ -1,8 +1,8 @@
 #pragma once
 #include "stdbool.h"
-#include "ata.h"
+#include <disk/ata.h>
 #include <stdint.h>
-#include <device.h>
+#include <disk/device.h>
 #define PACKED                     __attribute__((packed))
 
 #define BLOCK_SIZE                 512

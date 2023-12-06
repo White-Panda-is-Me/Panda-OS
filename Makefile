@@ -56,7 +56,7 @@ $(BUILD_DIR)/kernel.bin: $(SRC_DIR)/kernel/main.c
 # # # # # # # # # #
 
 run:
-	qemu-system-x86_64 -hda $(BUILD_DIR)/disk.img -accel hvf
+	qemu-system-x86_64 -machine q35 -hda $(BUILD_DIR)/disk.img -accel hvf
 
 
 # # # # # # # # # #

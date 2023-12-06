@@ -1,5 +1,5 @@
 #include "ata.h"
-#include <x86.h>
+#include <io.h>
 #include <string.h>
 
 #define ATA_PRIMARY_IO 0x1F0
@@ -35,7 +35,14 @@ void Identify(uint8_t bus, uint8_t drive) {
     x86_outb(io + ATA_REG_COMMAND, ATA_CMD_IDENTIFY);
     uint8_t status = x86_inb(io + ATA_REG_STATUS);
     if (status) {
-        while((x86_inb(io + ATA_REG_STATUS) & ATA_SR_BSY) != 0);
+        printf("status checked\n");
+        bsy:
+        uint8_t bsy = x86_inb(io + ATA_REG_STATUS);
+        while(bsy & ATA_SR_BSY) {
+            printf("BSY: %hhu\n", bsy);
+            goto bsy;
+        }
+        printf("after BSY\n");
         pm_read_start:
         status = x86_inb(io + ATA_REG_STATUS);
         if(status & ATA_SR_ERR) {
@@ -77,6 +84,7 @@ void ide_poll(uint16_t io) {
 void ata_init(device* dev) {
     printf("ATA DEVICES:\n");
     Identify(ATA_PRIMARY, ATA_MASTER);
+    printf("after Identify\n");
     char name[40];
     for (int i = 0;i < 40;i += 2) {
         name[i] = ata_buffer[ATA_IDENT_MODEL + i + 1];
@@ -84,7 +92,7 @@ void ata_init(device* dev) {
     }
     strcpy(dev->name, name);
     dev->drive = (ATA_PRIMARY << 1) | ATA_MASTER;
-    Identify(ATA_PRIMARY, ATA_SLAVE);
+    // Identify(ATA_PRIMARY, ATA_SLAVE);
 }
 
 void ata_read_one(uint32_t lba, void* buffer, device* dev) {

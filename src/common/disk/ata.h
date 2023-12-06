@@ -1,7 +1,7 @@
 #pragma once
 #include <stdint.h>
-#include <x86.h>
-#include <device.h>
+#include <io.h>
+#include <disk/device.h>
 #include <stdio.h>
 
 // Status registers

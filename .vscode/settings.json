@@ -12,7 +12,8 @@
         "stdarg.h": "c",
         "device.h": "c",
         "irq.h": "c",
-        "handlers.h": "c"
+        "handlers.h": "c",
+        "hal.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

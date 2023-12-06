@@ -1,6 +1,6 @@
 #include <stddef.h>
 #include <stdio.h>
-#include <x86.h>
+#include <io.h>
 #include "isr.h"
 #include "idt.h"
 

@@ -5,8 +5,8 @@ CFILES=$(wildcard *.c)
 ASMFILES=$(wildcard *.asm)
 COBJFILES=$(patsubst %.c, $(BUILD_DIR)/stage2/c/%.obj, $(CFILES))
 ASMOBJFILES=$(patsubst %.asm, $(BUILD_DIR)/stage2/asm/%.obj, $(ASMFILES))
-COMMONCOBJFILES=$(shell find $(BUILD_DIR)/common/c/*.obj)
-COMMONASMOBJFILES=$(shell find $(BUILD_DIR)/common/asm/*.obj)
+COMMONCOBJFILES=$(wildcard $(BUILD_DIR)/common/c/*.obj) $(wildcard $(BUILD_DIR)/common/c/*/*.obj)
+COMMONASMOBJFILES=$(wildcard $(BUILD_DIR)/common/asm/*.obj) $(wildcard $(BUILD_DIR)/common/asm/*/*.obj)
 CFLAGS=-std=c99 -g -ffreestanding -nostdlib -Wall -Werror -Wno-unused-variable -I. -I../../common
 LDFLAGS=-T linker.ld -nostdlib
 
