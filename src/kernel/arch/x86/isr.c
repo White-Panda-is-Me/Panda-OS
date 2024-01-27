@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <io.h>
 #include "isr.h"
 #include "idt.h"
@@ -48,7 +49,7 @@ void ISR_Init() {
     }
 }
 
-void __attribute__((cdecl)) x86_ISR_Handler(Pushed_Regs* regs) {
+void x86_ISR_Handler(Pushed_Regs* regs) {
     if(g_ISRHandlers[regs->interrupt] != NULL)
         g_ISRHandlers[regs->interrupt](regs);
 

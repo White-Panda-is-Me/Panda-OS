@@ -1,4 +1,6 @@
 #include "handlers.h"
 #include <stdio.h>
 
-void timer(Pushed_Regs* regs) {}
+void timer(Pushed_Regs* regs) {
+	printf(".");
+}

@@ -1,7 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include <io.h>
-#include <disk/device.h>
+#include "device.h"
 #include <stdio.h>
 
 // Status registers
@@ -81,5 +81,5 @@
 
 void ata_init(device* dev);
 void ide_select_drive(uint8_t bus, uint8_t i);
-void Identify(uint8_t bus, uint8_t drive);
+int Identify(uint8_t bus, uint8_t drive);
 void ata_read(uint32_t lba, uint16_t sectorNum, void* buffer, device* dev);

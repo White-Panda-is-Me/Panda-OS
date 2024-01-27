@@ -1,69 +1,28 @@
-export BUILD_DIR=$(abspath build)
-export SRC_DIR=$(abspath src)
-SRC_DIR=src
-FORMAT=$(HOME)/programming/C/mlfs2/build/format
-COPY=$(HOME)/programming/C/mlfs2/build/copy
-ASM=nasm
+export BUILD_DIR = $(abspath build)
 
-.PHONY: run
+$(BUILD_DIR)/disk.img: $(BUILD_DIR)/part.img
+	dd if=/dev/zero of=$@ bs=512 count=93750
+	parted $@ -s -a minimal mklabel gpt
+	parted $@ -s -a minimal mkpart EFI FAT32 2048s 93716s
+	parted $@ -s -a minimal toggle 1 boot
+	dd if=$< of=$@ bs=512 count=91669 seek=2048 conv=notrunc
+	rm src/main.o 
 
-disk: $(BUILD_DIR)/disk.img
+$(BUILD_DIR)/part.img: BOOTX64.efi kernel.elf
+	dd if=/dev/zero of=$@ bs=512 count=91669    
+	mformat -i $@ -h 32 -t 32 -n 64 -c 1
+	mmd -i $@ "::EFI"
+	mmd -i $@ "::EFI/Boot"
+	mmd -i $@ "::kernel"
+	mcopy -i $@ $(BUILD_DIR)/BOOTX64.efi "::EFI/Boot/BOOTX64.efi"
+	mcopy -i $@ font.sfn "::EFI/Boot/font.sfn"
+	mcopy -i $@ $(BUILD_DIR)/kernel.elf "::kernel/kernel.elf"
 
-$(BUILD_DIR)/disk.img: bootloader kernel
-	@dd if=/dev/zero of=$(BUILD_DIR)/disk.img bs=1 count=1
-	@$(FORMAT) $(BUILD_DIR)/disk.img $(BUILD_DIR)/stage1.bin 20480
-	@$(COPY) $(BUILD_DIR)/disk.img $(BUILD_DIR)/stage2.bin
-	@$(COPY) $(BUILD_DIR)/disk.img $(BUILD_DIR)/kernel.bin
-	@$(COPY) $(BUILD_DIR)/disk.img ./test.txt
+BOOTX64.efi: src/main.c
+	$(MAKE) -C src/
 
-# # # # # # # # # #
-#                 #
-#    bootloader   #
-#                 #
-# # # # # # # # # #
+kernel.elf:
+	$(MAKE) -C src/kernel/
 
-bootloader: stage1 stage2
-
-stage1: $(BUILD_DIR)/stage1.bin
-
-$(BUILD_DIR)/stage1.bin: $(SRC_DIR)/bootloader/stage1/stage1.asm
-	@mkdir -p build
-	@$(ASM) -g $(SRC_DIR)/bootloader/stage1/stage1.asm -f bin -o $(BUILD_DIR)/stage1.bin
-
-stage2: $(BUILD_DIR)/stage2.bin
-
-$(BUILD_DIR)/stage2.bin: $(SRC_DIR)/bootloader/stage2
-	@$(MAKE) -C $(SRC_DIR)/common
-	@$(MAKE) -C $(SRC_DIR)/bootloader/stage2
-
-
-# # # # # # # # # #
-#                 #
-#      kernel     #
-#                 #
-# # # # # # # # # #
-
-kernel: $(BUILD_DIR)/kernel.bin
-
-$(BUILD_DIR)/kernel.bin: $(SRC_DIR)/kernel/main.c
-	@$(MAKE) -C $(SRC_DIR)/kernel
-
-
-# # # # # # # # # #
-#                 #
-#       run       #
-#                 #
-# # # # # # # # # #
-
-run:
-	qemu-system-x86_64 -machine q35 -hda $(BUILD_DIR)/disk.img -accel hvf
-
-
-# # # # # # # # # #
-#                 #
-#      clean      #
-#                 #
-# # # # # # # # # #
-
-clean:
-	rm -r $(BUILD_DIR)
+c:
+	rm -r $(BUILD_DIR)/*

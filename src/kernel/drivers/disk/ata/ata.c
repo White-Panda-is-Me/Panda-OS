@@ -22,7 +22,7 @@ void ide_select_drive(uint8_t bus, uint8_t i) {
 		else x86_outb(ATA_SECONDARY_IO + ATA_REG_HDDEVSEL, 0xB0);
 }
 
-void Identify(uint8_t bus, uint8_t drive) {
+int Identify(uint8_t bus, uint8_t drive) {
     uint16_t io = 0;
     ide_select_drive(bus, drive);
     if (bus == ATA_PRIMARY) io = ATA_PRIMARY_IO;
@@ -35,28 +35,30 @@ void Identify(uint8_t bus, uint8_t drive) {
     x86_outb(io + ATA_REG_COMMAND, ATA_CMD_IDENTIFY);
     uint8_t status = x86_inb(io + ATA_REG_STATUS);
     if (status) {
-        printf("status checked\n");
-        bsy:
         uint8_t bsy = x86_inb(io + ATA_REG_STATUS);
-        while(bsy & ATA_SR_BSY) {
-            printf("BSY: %hhu\n", bsy);
-            goto bsy;
-        }
-        printf("after BSY\n");
+		int i = 0;
+        while(bsy & ATA_SR_BSY && i < 1000) {
+        	bsy = x86_inb(io + ATA_REG_STATUS);
+			i++;
+        } if (i == 999) return 0;
+		i = 0;
         pm_read_start:
         status = x86_inb(io + ATA_REG_STATUS);
+		i++;
         if(status & ATA_SR_ERR) {
-            printf("\tATA DEVICE: %s %s not found!\n", bus == ATA_PRIMARY ? "Primary" : "Secondary", drive == ATA_MASTER ? "Master" : "Slave");
-            return;
+            printf("ATA DEVICE: %s %s not found!\n", bus == ATA_PRIMARY ? "Primary" : "Secondary", drive == ATA_MASTER ? "Master" : "Slave");
+            return 0;
         }
-        while(!(status & ATA_SR_DRQ)) goto pm_read_start;
-        printf("\tATA DEVICE: %s %s is online!\n", bus == ATA_PRIMARY ? "Primary" : "Secondary", drive == ATA_MASTER ? "Master" : "Slave");
-        for(int i = 0; i < 256; i++) {
+        while(!(status & ATA_SR_DRQ) && i < 1000) goto pm_read_start;
+		if (i == 999) return 0;
+        printf("    ATA DEVICE: %s %s is online!\n", bus == ATA_PRIMARY ? "Primary" : "Secondary", drive == ATA_MASTER ? "Master" : "Slave");
+        for(i = 0; i < 256; i++) {
 			*(uint16_t *)(ata_buffer + i * 2) = x86_inw(io + ATA_REG_DATA);
 		}
-        return;
+        return 1;
     }
-    printf("\tATA DEVICE: %s %s not found!\n", bus == ATA_PRIMARY ? "Primary" : "Secondary", drive == ATA_MASTER ? "Master" : "Slave");
+    printf("ATA DEVICE: %s %s not found!\n", bus == ATA_PRIMARY ? "Primary" : "Secondary", drive == ATA_MASTER ? "Master" : "Slave");
+	return 0;
 }
 
 void ide_400ns_delay(uint16_t io) {
@@ -83,15 +85,17 @@ void ide_poll(uint16_t io) {
 
 void ata_init(device* dev) {
     printf("ATA DEVICES:\n");
-    Identify(ATA_PRIMARY, ATA_MASTER);
-    printf("after Identify\n");
-    char name[40];
-    for (int i = 0;i < 40;i += 2) {
-        name[i] = ata_buffer[ATA_IDENT_MODEL + i + 1];
-        name[i + 1] = ata_buffer[ATA_IDENT_MODEL + i];
-    }
-    strcpy(dev->name, name);
-    dev->drive = (ATA_PRIMARY << 1) | ATA_MASTER;
+    if (Identify(ATA_PRIMARY, ATA_MASTER) == 1) {
+	    char name[40];
+    	for (int i = 0;i < 40;i += 2) {
+        	name[i] = ata_buffer[ATA_IDENT_MODEL + i + 1];
+	        name[i + 1] = ata_buffer[ATA_IDENT_MODEL + i];
+    	}
+    	strcpy(dev->name, name);
+    	dev->drive = (ATA_PRIMARY << 1) | ATA_MASTER;
+		return;
+	}
+	printf("    No ATA devices found!\n");
     // Identify(ATA_PRIMARY, ATA_SLAVE);
 }
 
@@ -120,7 +124,7 @@ void ata_read_one(uint32_t lba, void* buffer, device* dev) {
             printf("Invalid device!!!\n");
     }
 
-    // ide_400ns_delay(io);
+     ide_400ns_delay(io);
     uint8_t cmd = (drive == ATA_MASTER ? ATA_CMD_MASTER : ATA_CMD_SLAVE);
     // uint8_t slavebit = (drive == ATA_MASTER ? ATA_MASTER : ATA_SLAVE);
 

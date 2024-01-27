@@ -16,17 +16,19 @@ typedef enum {
 typedef struct {
     uint16_t BaseLow;
     uint16_t SegmentSelector;
-    uint8_t Reserved;
+    uint8_t Reserved1;
     uint8_t TypeAttributes;
     uint16_t BaseHi;
+	uint32_t BaseHier;
+	uint32_t Reserved2;
 } __attribute__((packed)) IDTEntry;
 
 typedef struct {
     uint16_t Limit;
-    IDTEntry* IDTs;
+    uint64_t* IDTs;
 } __attribute__((packed)) IDTDescriptor;
 
-void __attribute__((cdecl)) x86_IDT_Load(IDTDescriptor* IDT_Desc);
+void x86_IDT_Load(IDTDescriptor* IDT_Desc);
 
 void x86_IDT_SetGate(int interrupt, void* base, uint16_t segmentDescriptor, uint8_t attr);
 void x86_IDT_EnableGate(int interrupt);
