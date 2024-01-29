@@ -13,7 +13,7 @@ ASM = nasm
 
 $(TARGET): $(COBJFILES) $(ASMOBJFILES)
 	mkdir -p $(BUILD_DIR)/kernel
-	$(LD) -nostdlib -z max-page-size=0x1000 -Ttext=0x01000000 $(COBJFILES)$(ASMOBJFILES) -o $@
+	$(LD) -nostdlib -Map=$(BUILD_DIR)/kernel.map -z max-page-size=0x1000 -Ttext=0x01000000 $(COBJFILES)$(ASMOBJFILES) -o $@
 
 $(BUILD_DIR)/kernel/c/%.o: %.c
 	@mkdir -p $(@D)

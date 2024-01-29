@@ -9,8 +9,6 @@ void x86_IDT_SetGate(int interrupt, void* base, uint16_t segmentDescriptor, uint
     g_IDTs[interrupt].Reserved1 = 0;
     g_IDTs[interrupt].TypeAttributes = attr;
     g_IDTs[interrupt].BaseHi = ((uint64_t)base >> 16) & 0xFFFF;
-	g_IDTs[interrupt].BaseHier = ((uint64_t)base >> 32) & 0xFFFFFFFF;
-	g_IDTs[interrupt].Reserved2 = (uint32_t) 0;
 }
 
 void x86_IDT_EnableGate(int interrupt) {

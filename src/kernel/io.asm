@@ -8,6 +8,16 @@ x86_outb:
 
     ret
 
+global x86_outl
+x86_outl:
+    [bits 32]
+
+    mov dx, [esp + 4]
+    mov eax, [esp + 8]
+    out dx, eax
+
+    ret
+
 global x86_inb
 x86_inb:
     [bits 64]
@@ -23,6 +33,15 @@ x86_inw:
 
     mov dx, [esp + 4]
     in ax, dx
+
+    ret
+
+global x86_inl
+x86_inl:
+    [bits 32]
+
+    mov dx, [esp + 4]
+    in eax, dx
 
     ret
 

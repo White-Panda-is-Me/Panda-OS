@@ -1,5 +1,4 @@
 #include "idt.h"
-#include "gdt.h"
 
 void x86_ISR0();
 void x86_ISR1();

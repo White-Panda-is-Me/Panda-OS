@@ -2,8 +2,8 @@
 #include <stdint.h>
 
 typedef struct {
-    uint32_t edi, esi, ebp, shit, ebx, edx, ecx, eax;        // getting those shit regs from stack
-    uint32_t interrupt, error;                                  // no need for comment, It's obvious
+    uint64_t rdi, rsi, rbp, shit, rbx, rdx, rcx, rax;        // getting those shit regs from stack
+    uint64_t interrupt, error;                                  // no need for comment, It's obvious
     uint32_t eip, cs, eflags, esp, ss;                          // It's pushed to the stack by stupid CPU
 } __attribute__((packed)) Pushed_Regs;
 

@@ -19,13 +19,11 @@ typedef struct {
     uint8_t Reserved1;
     uint8_t TypeAttributes;
     uint16_t BaseHi;
-	uint32_t BaseHier;
-	uint32_t Reserved2;
 } __attribute__((packed)) IDTEntry;
 
 typedef struct {
     uint16_t Limit;
-    uint64_t* IDTs;
+    IDTEntry* IDTs;
 } __attribute__((packed)) IDTDescriptor;
 
 void x86_IDT_Load(IDTDescriptor* IDT_Desc);

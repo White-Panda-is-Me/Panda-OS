@@ -1,28 +1,26 @@
-;
-; void __attribute__((cdecl)) x86_GDT_Load(GDT_Descriptor* descriptor, uint16_t codeSegment, uint16_t dataSegment);
-;
-[bits 32]
+[bits 64]
+
+extern kmain
+
 global x86_GDT_Load
 x86_GDT_Load:
-    push ebp
-    mov ebp, esp
+    mov rax, [rbp + 12]
+    lgdt [rax]
 
-    mov eax, [ebp + 8]
-    lgdt [eax]
-
-    mov eax, [ebp + 12]
-    push eax
+    mov rax, [rbp + 20]
+    push rax
     push .load_cs
     retf
 
 .load_cs:
-    mov ax, [ebp + 16]
-    mov ds, ax
-    mov ss, ax
-    mov fs, ax
-    mov gs, ax
-    mov es, ax
+	mov rax, [rbp + 28]
+	mov ds, ax
+	mov ss, ax
+	mov fs, ax
+	mov gs, ax
+	mov es, ax
 
-    mov esp, ebp
-    pop ebp
-    ret
+	call kmain
+
+	cli
+	hlt

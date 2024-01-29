@@ -54,18 +54,18 @@ void x86_ISR_Handler(Pushed_Regs* regs) {
         g_ISRHandlers[regs->interrupt](regs);
 
     else if(regs->interrupt >= 32)
-        printf("Fuck this Interrupt: %d, Not handled!", regs->interrupt);
+        printf("Fuck this Interrupt: %lld, Not handled!", regs->interrupt);
 
     else {
-        printf("Fuck this Exeption: %d Which means: %s\n", regs->interrupt, g_Exceptions[regs->interrupt]);
+        printf("Fuck this Exeption: %lld Which means: %s\n", regs->interrupt, g_Exceptions[regs->interrupt]);
 
-        printf("  eax=%x  ebx=%x  ecx=%x  edx=%x  esi=%x  edi=%x\n",
-               regs->eax, regs->ebx, regs->ecx, regs->edx, regs->esi, regs->edi);
+        printf("  rax=%llx  rbx=%llx  rcx=%llx  rdx=%llx  rsi=%llx  rdi=%llx\n",
+               regs->rax, regs->rbx, regs->rcx, regs->rdx, regs->rsi, regs->rdi);
 
-        printf("  esp=%x  ebp=%x  eip=%x  eflags=%x  cs=%x  ss=%x\n",
-               regs->esp, regs->ebp, regs->eip, regs->eflags, regs->cs, regs->ss);
+        printf("  rsp=%llx  rbp=%llx  eip=%x  eflags=%x  cs=%x  ss=%x\n",
+               regs->shit, regs->rbp, regs->eip, regs->eflags, regs->cs, regs->ss);
 
-        printf("  interrupt=%x  errorcode=%x\n", regs->interrupt, regs->error);
+        printf("  interrupt=%llx  errorcode=%llx\n", regs->interrupt, regs->error);
 
         printf("KERNEL PANIC!!!\n");
         panic();
