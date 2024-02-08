@@ -74,3 +74,8 @@ panic:
     cli
     hlt
 
+
+global fuck
+fuck:
+    mov ax, ds
+    ret

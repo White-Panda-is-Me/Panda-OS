@@ -1,26 +1,21 @@
 [bits 64]
 
-extern kmain
-
 global x86_GDT_Load
 x86_GDT_Load:
-    mov rax, [rbp + 12]
+    mov rax, rdi
     lgdt [rax]
 
-    mov rax, [rbp + 20]
+    mov rax, rsi
     push rax
     push .load_cs
-    retf
+    retfq
 
 .load_cs:
-	mov rax, [rbp + 28]
-	mov ds, ax
-	mov ss, ax
-	mov fs, ax
-	mov gs, ax
-	mov es, ax
+    mov rax, rdx
+    mov ds, ax
+    mov ss, ax
+    mov fs, ax
+    mov gs, ax
+    mov es, ax
 
-	call kmain
-
-	cli
-	hlt
+    ret

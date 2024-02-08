@@ -7,7 +7,7 @@ x86_IDT_Load:
     push rbp
     mov rbp, rsp
 
-    mov rax, [rbp + 8]
+    mov rax, [rbp + 16]
     lidt [rax]
 
     mov rsp, rbp

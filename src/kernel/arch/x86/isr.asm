@@ -24,11 +24,27 @@ x86_ISR%1:
 %include "arch/x86/big_isr.inc"
 
 common_isr:
-    pushaq       ; push some shit regs: rax, rcx, rdx, rbx, rsp, rbp, rsi, rdi
+    push rax       ; push some shit regs: rax, rcx, rdx, rbx, rsp, rbp, rsi, rdi
+    push rcx
+    push rdx
+    push rbx
+    push rsp
+    push rbp
+    push rsi
+    push rdi
 
     push rsp
     call x86_ISR_Handler
-    add rsp, 4
-    popaq
     add rsp, 8
-    iret
+
+    pop rdi
+    pop rsi
+    pop rbp
+    pop rsp
+    pop rbx
+    pop rdx
+    pop rcx
+    pop rax       ; push some shit regs: rax, rcx, rdx, rbx, rsp, rbp, rsi, rdi
+
+    add rsp, 16
+    iretq

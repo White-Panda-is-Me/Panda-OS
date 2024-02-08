@@ -7,8 +7,8 @@ COBJFILES=$(patsubst %.c, $(BUILD_DIR)/kernel/c/%.o, $(CFILES))
 ASMOBJFILES=$(patsubst %.asm, $(BUILD_DIR)/kernel/asm/%.o, $(ASMFILES))
 all: $(TARGET)
 
-CC = gcc
-LD = ld
+CC = x86_64-elf-gcc
+LD = x86_64-elf-ld
 ASM = nasm
 
 $(TARGET): $(COBJFILES) $(ASMOBJFILES)
@@ -17,7 +17,7 @@ $(TARGET): $(COBJFILES) $(ASMOBJFILES)
 
 $(BUILD_DIR)/kernel/c/%.o: %.c
 	@mkdir -p $(@D)
-	$(CC) -I. -ffreestanding -std=c99 -fno-stack-protector -fno-stack-check -D__$(ARCH)__ -c $< -o $@
+	$(CC) -I. -ffreestanding -mpush-args -std=c99 -fno-stack-protector -mno-red-zone -fno-stack-check -c $< -o $@
 
 $(BUILD_DIR)/kernel/asm/%.o: %.asm
 	@mkdir -p $(@D)

@@ -68,10 +68,10 @@ void ide_400ns_delay(uint16_t io) {
 
 void ide_poll(uint16_t io) {
 	ide_400ns_delay(io);
-
+	uint8_t status;
     retry:
 
-	uint8_t status = x86_inb(io + ATA_REG_STATUS);
+	status = x86_inb(io + ATA_REG_STATUS);
 	if(status & ATA_SR_BSY) goto retry;
     retry2:
 

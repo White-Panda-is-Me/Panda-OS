@@ -8,13 +8,13 @@ typedef struct {
     uint8_t AccessBytes;
     uint8_t LimitHi_Flags;
     uint8_t BaseHi;
-    uint64_t BaseHier;
-    uint64_t Reserved;
+	uint32_t BaseHier;
+	uint32_t Reserved;
 } __attribute__((packed)) GDTEntry;
 
 typedef struct {
     uint16_t limit;
-    uint64_t* Base;
+    GDTEntry* Base;
 } __attribute__((packed)) GDT_Descriptor;
 
 void GDT_Init();
