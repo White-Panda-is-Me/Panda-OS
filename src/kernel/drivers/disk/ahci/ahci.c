@@ -6,9 +6,9 @@
 
 uint32_t pci_read(uint8_t bus, uint8_t device, uint8_t function, uint8_t offset) {
     uint32_t address = 0x80000000 | bus << 16 | device << 11 | function <<  8 | offset;
-    x86_outl(0xCF8, address);
+    x64_outl(0xCF8, address);
     for (volatile int i = 0; i < 100; ++i);
-    return x86_inl(0xCFC);
+    return x64_inl(0xCFC);
 }
 
 int is_ahci_controller(uint8_t class_code, uint8_t subclass, uint8_t prog_if) {

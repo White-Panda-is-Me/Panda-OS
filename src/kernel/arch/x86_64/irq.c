@@ -19,7 +19,7 @@ void Common_Handler(Pushed_Regs* regs) {
 void IRQ_Init() {
     pic_init();
     for (int i = 0;i < 16;i++)
-        x86_Set_Interrupt_Handler(0x20 + i, Common_Handler);
+        x64_Set_Interrupt_Handler(0x20 + i, Common_Handler);
 
     __asm__ volatile ("sti");
 }

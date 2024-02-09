@@ -14,12 +14,12 @@ uint8_t* ata_buffer = (uint8_t*) 0x5500;
 void ide_select_drive(uint8_t bus, uint8_t i) {
 	if(bus == ATA_PRIMARY)
 		if(i == ATA_MASTER)
-			x86_outb(ATA_PRIMARY_IO + ATA_REG_HDDEVSEL, 0xA0);
-		else x86_outb(ATA_PRIMARY_IO + ATA_REG_HDDEVSEL, 0xB0);
+			x64_outb(ATA_PRIMARY_IO + ATA_REG_HDDEVSEL, 0xA0);
+		else x64_outb(ATA_PRIMARY_IO + ATA_REG_HDDEVSEL, 0xB0);
 	else
 		if(i == ATA_MASTER)
-			x86_outb(ATA_SECONDARY_IO + ATA_REG_HDDEVSEL, 0xA0);
-		else x86_outb(ATA_SECONDARY_IO + ATA_REG_HDDEVSEL, 0xB0);
+			x64_outb(ATA_SECONDARY_IO + ATA_REG_HDDEVSEL, 0xA0);
+		else x64_outb(ATA_SECONDARY_IO + ATA_REG_HDDEVSEL, 0xB0);
 }
 
 int Identify(uint8_t bus, uint8_t drive) {
@@ -27,23 +27,23 @@ int Identify(uint8_t bus, uint8_t drive) {
     ide_select_drive(bus, drive);
     if (bus == ATA_PRIMARY) io = ATA_PRIMARY_IO;
     else io = ATA_SECONDARY_IO;
-    x86_outb(io + ATA_REG_SECCOUNT0, 0);
-    x86_outb(io + ATA_REG_LBA0, 0);
-    x86_outb(io + ATA_REG_LBA1, 0);
-    x86_outb(io + ATA_REG_LBA2, 0);
+    x64_outb(io + ATA_REG_SECCOUNT0, 0);
+    x64_outb(io + ATA_REG_LBA0, 0);
+    x64_outb(io + ATA_REG_LBA1, 0);
+    x64_outb(io + ATA_REG_LBA2, 0);
     // send Identify
-    x86_outb(io + ATA_REG_COMMAND, ATA_CMD_IDENTIFY);
-    uint8_t status = x86_inb(io + ATA_REG_STATUS);
+    x64_outb(io + ATA_REG_COMMAND, ATA_CMD_IDENTIFY);
+    uint8_t status = x64_inb(io + ATA_REG_STATUS);
     if (status) {
-        uint8_t bsy = x86_inb(io + ATA_REG_STATUS);
+        uint8_t bsy = x64_inb(io + ATA_REG_STATUS);
 		int i = 0;
         while(bsy & ATA_SR_BSY && i < 1000) {
-        	bsy = x86_inb(io + ATA_REG_STATUS);
+        	bsy = x64_inb(io + ATA_REG_STATUS);
 			i++;
         } if (i == 999) return 0;
 		i = 0;
         pm_read_start:
-        status = x86_inb(io + ATA_REG_STATUS);
+        status = x64_inb(io + ATA_REG_STATUS);
 		i++;
         if(status & ATA_SR_ERR) {
             printf("ATA DEVICE: %s %s not found!\n", bus == ATA_PRIMARY ? "Primary" : "Secondary", drive == ATA_MASTER ? "Master" : "Slave");
@@ -53,7 +53,7 @@ int Identify(uint8_t bus, uint8_t drive) {
 		if (i == 999) return 0;
         printf("    ATA DEVICE: %s %s is online!\n", bus == ATA_PRIMARY ? "Primary" : "Secondary", drive == ATA_MASTER ? "Master" : "Slave");
         for(i = 0; i < 256; i++) {
-			*(uint16_t *)(ata_buffer + i * 2) = x86_inw(io + ATA_REG_DATA);
+			*(uint16_t *)(ata_buffer + i * 2) = x64_inw(io + ATA_REG_DATA);
 		}
         return 1;
     }
@@ -63,7 +63,7 @@ int Identify(uint8_t bus, uint8_t drive) {
 
 void ide_400ns_delay(uint16_t io) {
 	for(int i = 0;i < 4; i++)
-		x86_inb(io + ATA_REG_ALTSTATUS);
+		x64_inb(io + ATA_REG_ALTSTATUS);
 }
 
 void ide_poll(uint16_t io) {
@@ -71,11 +71,11 @@ void ide_poll(uint16_t io) {
 	uint8_t status;
     retry:
 
-	status = x86_inb(io + ATA_REG_STATUS);
+	status = x64_inb(io + ATA_REG_STATUS);
 	if(status & ATA_SR_BSY) goto retry;
     retry2:
 
-    status = x86_inb(io + ATA_REG_STATUS);
+    status = x64_inb(io + ATA_REG_STATUS);
 	if(status & ATA_SR_ERR)	{
 		printf("ERR set, device failure!\n");
 	}
@@ -128,18 +128,18 @@ void ata_read_one(uint32_t lba, void* buffer, device* dev) {
     uint8_t cmd = (drive == ATA_MASTER ? ATA_CMD_MASTER : ATA_CMD_SLAVE);
     // uint8_t slavebit = (drive == ATA_MASTER ? ATA_MASTER : ATA_SLAVE);
 
-    x86_outb(io + ATA_REG_HDDEVSEL, (cmd | (uint8_t)((lba >> 24 & 0x0F))));
-    x86_outb(io + 1, 0x00);
-    x86_outb(io + ATA_REG_SECCOUNT0, 1);
-    x86_outb(io + ATA_REG_LBA0, (uint8_t)((lba)));
-    x86_outb(io + ATA_REG_LBA1, (uint8_t)((lba) >> 8));
-    x86_outb(io + ATA_REG_LBA2, (uint8_t)((lba) >> 16));
-    x86_outb(io + ATA_REG_COMMAND, ATA_CMD_READ_PIO);
+    x64_outb(io + ATA_REG_HDDEVSEL, (cmd | (uint8_t)((lba >> 24 & 0x0F))));
+    x64_outb(io + 1, 0x00);
+    x64_outb(io + ATA_REG_SECCOUNT0, 1);
+    x64_outb(io + ATA_REG_LBA0, (uint8_t)((lba)));
+    x64_outb(io + ATA_REG_LBA1, (uint8_t)((lba) >> 8));
+    x64_outb(io + ATA_REG_LBA2, (uint8_t)((lba) >> 16));
+    x64_outb(io + ATA_REG_COMMAND, ATA_CMD_READ_PIO);
 
     ide_poll(io);
 
     for(int i = 0; i < 256; i++) {
-		uint16_t data = x86_inw(io + ATA_REG_DATA);
+		uint16_t data = x64_inw(io + ATA_REG_DATA);
 		*(uint16_t *)(buffer + i * 2) = data;
 	}
     ide_400ns_delay(io);

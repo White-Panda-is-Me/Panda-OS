@@ -43,13 +43,14 @@ static const char* const g_Exceptions[] = {
 };
 
 void ISR_Init() {
-    x86_ISR_SetGates();
+    x64_ISR_SetGates();
     for (int i = 0;i < 256;i++) {
-        x86_IDT_EnableGate(i);
+        x64_IDT_EnableGate(i);
     }
+	__asm__ ("sti");
 }
 
-void x86_ISR_Handler(Pushed_Regs* regs) {
+void x64_ISR_Handler(Pushed_Regs* regs) {
     if(g_ISRHandlers[regs->interrupt] != NULL)
         g_ISRHandlers[regs->interrupt](regs);
 
@@ -62,17 +63,17 @@ void x86_ISR_Handler(Pushed_Regs* regs) {
         printf("  rax=%llx  rbx=%llx  rcx=%llx  rdx=%llx  rsi=%llx  rdi=%llx\n",
                regs->rax, regs->rbx, regs->rcx, regs->rdx, regs->rsi, regs->rdi);
 
-        printf("  rsp=%llx  rbp=%llx  eip=%llx  eflags=%llx  cs=%llx  ss=%llx\n",
-               regs->shit, regs->rbp, regs->eip, regs->eflags, regs->cs, regs->ss);
+        printf("  rbp=%llx  rip=%llx  rflags=%llx  cs=%llx  ss=%llx\n",
+               regs->rbp, regs->rip, regs->rflags, regs->cs, regs->ss);
 
-        printf("  interrupt=%llx  errorcode=%llx\n", regs->interrupt, regs->error);
+        printf("  interrupt=%llx  errorcode=%llx\n", regs->interrupt, regs->error_code);
 
         printf("KERNEL PANIC!!!\n");
         panic();
     }
 }
 
-void x86_Set_Interrupt_Handler(int interrupt, ISRHandler handler) {
+void x64_Set_Interrupt_Handler(int interrupt, ISRHandler handler) {
     g_ISRHandlers[interrupt] = handler;
-    x86_IDT_EnableGate(interrupt);
+    x64_IDT_EnableGate(interrupt);
 }

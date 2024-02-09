@@ -4,17 +4,16 @@
 #include "arch/hal/hal.h"
 device g_dev;
 
-// extern void x86_GDT_Load();
+extern void fuck();
 
 void _start(bootparam_t *bootpar) {
 	init_GUI(bootpar);
 
 	printf("Hello from kernel!!!\n");
 	HAL_Init();
-	// x86_GDT_Load();
+	printf("HAL Initialized\n");
 	ata_init(&g_dev);
 	// HBA_MEM_REGS* hba_mem = find_ahci_controllers();
 	// printf("AHCI MEMORY BASE ADDRESS: %llx\n", hba_mem);
-	//kmain();
 	while(1);
 }

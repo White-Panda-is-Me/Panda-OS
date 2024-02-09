@@ -1,9 +1,10 @@
 [bits 64]
 
-global x86_GDT_Load
-x86_GDT_Load:
-    mov rax, rdi
-    lgdt [rax]
+global x64_GDT_Load
+x64_GDT_Load:
+	push rax
+
+    lgdt [rdi]
 
     mov rax, rsi
     push rax
@@ -18,4 +19,5 @@ x86_GDT_Load:
     mov gs, ax
     mov es, ax
 
+	pop rax
     ret

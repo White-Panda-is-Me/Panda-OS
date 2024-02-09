@@ -1,68 +1,100 @@
-global x86_outb
-x86_outb:
+global x64_outb
+x64_outb:
     [bits 64]
+	push rbp
+	mov rbp, rsp
+	push rax
+	push rdx
 
-    mov dx, [esp + 4]
-    mov al, [esp + 8]
+	mov rdx, rdi
+    mov rax, rsi
     out dx, al
 
+	pop rdx
+	pop rax
+	mov rsp, rbp
+	pop rbp
     ret
 
-global x86_outl
-x86_outl:
-    [bits 32]
+global x64_outl
+x64_outl:
+    [bits 64]
+	push rbp
+	mov rbp, rsp
+	push rax
+	push rdx
 
-    mov dx, [esp + 4]
-    mov eax, [esp + 8]
+	mov rdx, rdi
+    mov rax, rsi
     out dx, eax
 
+	pop rdx
+	pop rax
+	mov rsp, rbp
+	pop rbp
     ret
 
-global x86_inb
-x86_inb:
+global x64_inb
+x64_inb:
     [bits 64]
+	push rbp
+	mov rbp, rsp
+	push rdx
 
-    mov dx, [esp + 4]
+	mov rdx, rdi
+	xor rax, rax
     in al, dx
 
+	pop rdx
+	mov rsp, rbp
+	pop rbp
     ret
 
-global x86_inw
-x86_inw:
+global x64_inw
+x64_inw:
     [bits 64]
+	push rbp
+	mov rbp, rsp
+	push rdx
 
-    mov dx, [esp + 4]
+	mov rdx, rdi
+	xor rax, rax
     in ax, dx
 
+	pop rdx
+	mov rsp, rbp
+	pop rbp
     ret
 
-global x86_inl
-x86_inl:
-    [bits 32]
+global x64_inl
+x64_inl:
+    [bits 64]
+	push rbp
+	mov rbp, rsp
+	push rdx
 
-    mov dx, [esp + 4]
+	mov rdx, rdi
+	xor rax, rax
     in eax, dx
 
+	pop rdx
+	mov rsp, rbp
+	pop rbp
     ret
 
-global x86_insw
-x86_insw:
+global x64_insw
+x64_insw:
 	[bits 64]
     push rbp
-    mov ebp, esp
+    mov rbp, rsp
 
-    push rdi
     push rcx
-    push rdx
 
-    mov edi, [ebp + 8]
-    mov ecx, [ebp + 12]
-    mov edx, [ebp + 16]
+    mov rcx, rdx
+	mov rdx, rsi
     insw
 
-    pop rdx
     pop rcx
-    pop rdi
 
     mov esp, ebp
     pop rbp
@@ -77,5 +109,5 @@ panic:
 
 global fuck
 fuck:
-    mov ax, ds
+    int 0x1
     ret

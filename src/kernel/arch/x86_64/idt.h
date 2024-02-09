@@ -25,12 +25,12 @@ typedef struct {
 
 typedef struct {
     uint16_t Limit;
-    uint64_t* IDTs;
+    IDTEntry* IDTs;
 } __attribute__((packed)) IDTDescriptor;
 
-void x86_IDT_Load(IDTDescriptor* IDT_Desc);
+void x64_IDT_Load(IDTDescriptor* IDT_Desc);
 
-void x86_IDT_SetGate(int interrupt, void* base, uint16_t segmentDescriptor, uint8_t attr);
-void x86_IDT_EnableGate(int interrupt);
-void x86_IDT_DisableGate(int interrupt);
+void x64_IDT_SetGate(int interrupt, void* base, uint16_t segmentDescriptor, uint8_t attr);
+void x64_IDT_EnableGate(int interrupt);
+void x64_IDT_DisableGate(int interrupt);
 void IDT_Init();
